@@ -28,7 +28,7 @@ const AdminLogin = ({ handleAdminLogin }) => {
   };
 
   return (
-    <div className="flex flex-col justify-center items-center w-full min-h-screen bg-slate-900">
+    <div className="flex flex-col justify-center items-center w-full min-h-screen bg-slate-900 bg">
       <div className="flex flex-col justify-center items-center mt-4">
         <h1 className="text-5xl font-bold text-white">ALUMNI ENGAGEMENT HUB</h1>
         <h3 className="text-white text-2xl">Administrator Control</h3>

@@ -2,6 +2,25 @@
 @tailwind components;
 @tailwind utilities;
 
+.bg{
+    background: linear-gradient(-45deg, #130047, #001820);
+    background-size: 400% 400%;
+    animation: gradient 30s ease infinite;
+    height: 100vh;
+  }
+  
+  @keyframes gradient {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+  
 .background {
   background: linear-gradient(0deg, rgb(255, 226, 226) 0%, rgb(166, 213, 255) 100%);
   background-position: center;
