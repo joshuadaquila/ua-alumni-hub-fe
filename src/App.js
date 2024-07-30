@@ -96,7 +96,7 @@ function App() {
     <div className='App flex flex-col justify-center items-center m-0 p-0'>
       <Router>
         <Routes>
-          <Route path="/" element={<Login handleLogin={login} />} />
+          {/* <Route path="/" element={<Login handleLogin={login} />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/home" element={
             token ? <Home logout={logout} /> : <Navigate to="/" />
@@ -112,9 +112,9 @@ function App() {
           } />
           <Route path="/myprofile" element={
             token ? <MyProfile logout={logout} /> : <Navigate to="/" />
-          } />
+          } /> */}
 
-          <Route path='/admin/signin' element={<AdminLogin handleAdminLogin={adminlogin} />} />
+          <Route path='/' element={<AdminLogin handleAdminLogin={adminlogin} />} />
           <Route path="/admin/dashboard" element={
             adminToken ? <Dashboard logout={adminLogout} /> : <Navigate to="/admin/signin" />
           } />

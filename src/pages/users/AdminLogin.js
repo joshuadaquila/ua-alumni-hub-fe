@@ -4,6 +4,8 @@ import { Link } from "react-router-dom";
 import { useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import LoadingScreen from "../../components/LoadingScreen";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSignIn } from "@fortawesome/free-solid-svg-icons";
 
 const AdminLogin = ({ handleAdminLogin }) => {
   const [username, setUsername] = useState("");
@@ -42,7 +44,7 @@ const AdminLogin = ({ handleAdminLogin }) => {
 
           <div className="p-8 flex flex-col items-center">
             <button type="submit" className={`font-bold rounded-lg text-lg  w-48 h-16 bg-[#374151] text-[#ffffff] justify-center
-              ${isLoading? "" : "btn"}`} disabled={isLoading}> {isLoading? <LoadingScreen /> : "Log in" }
+              ${isLoading? "" : "btn"}`} disabled={isLoading}> <FontAwesomeIcon icon={faSignIn} /> {isLoading? <LoadingScreen /> : "Log in" }
             </button>
 
             

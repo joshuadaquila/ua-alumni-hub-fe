@@ -1,3 +1,4 @@
+// Alumni.js
 import React, { useState, useEffect } from 'react';
 import Sidebar from '../../components/users/Sidebar';
 import UserHeader from '../../components/users/UserHeader';
@@ -5,6 +6,7 @@ import AddBtn from '../../components/users/AddBtn';
 import axios from 'axios';
 import NewUserCon from '../../components/users/NewUserCon';
 import AlumniTable from '../../components/users/AlumniTable';
+import PrintReport from '../../components/users/PrintReport';
 
 export default function Alumni() {
   const [adminUName, setAdminUName] = useState(localStorage.getItem('adminUName'));
@@ -49,16 +51,18 @@ export default function Alumni() {
           <UserHeader />
         </div>
 
-        <div className=' mt-[6rem] shadow-md text-black'>
+        <div className='mt-[6rem] shadow-md text-black'>
           <p className='text-2xl font-bold mb-12'>List of Alumni</p>
-          <div className='flex justify-end'>
+          <div className='flex justify-end mb-4'>
             {/* <AddBtn add={handleNewUserCon}/> */}
           </div>
-          {showUserCon && <NewUserCon close={handleNewUserCon} /> }
+          {showUserCon && <NewUserCon close={handleNewUserCon} />}
 
-          <AlumniTable alumniData={alumni}/>
+          <PrintReport>
+            <AlumniTable alumniData={alumni} />
+          </PrintReport>
         </div>
       </div>
     </div>
-  )
+  );
 }
