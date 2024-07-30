@@ -74,8 +74,14 @@ const AdminLogin = ({ handleAdminLogin }) => {
           </div>
 
           <div className="p-8 flex flex-col items-center">
-            <button type="submit" className={`font-bold rounded-lg text-lg  w-48 h-16 bg-slate-700 text-[#ffffff] justify-center
-              ${isLoading? "" : "btn"}`} disabled={isLoading}> {isLoading? "":<FontAwesomeIcon icon={faSignIn} /> }{isLoading? <LoadingScreen /> : "Log in" }
+            <button
+              type="submit"
+              className={`font-bold rounded-lg text-lg w-48 h-16 bg-[#374151] text-[#ffffff] justify-center ${
+                isLoading ? "" : "btn"
+              }`}
+              disabled={isLoading}
+            >
+              {isLoading ? "" : <FontAwesomeIcon icon={faSignIn} />} {isLoading ? <LoadingScreen /> : "Log in"}
             </button>
           </div>
         </form>
