@@ -8,6 +8,7 @@ import { useEffect } from 'react';
 import axios from 'axios';
 import NewUserCon from '../../components/users/NewUserCon';
 import EditUserCon from '../../components/users/EditUserCon';
+import api from '../api';
 
 function Users() {
   const [adminUName, setAdminUName] = useState(localStorage.getItem('adminUName'));
@@ -34,7 +35,7 @@ function Users() {
   }, [adminToken]);
 
   useEffect(() => {
-    axios.get('http://localhost:3001/getUsers')
+    api.get('/getUsers')
       .then(response => {
         setUsers(response.data);
       })

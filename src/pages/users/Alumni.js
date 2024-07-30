@@ -7,6 +7,7 @@ import axios from 'axios';
 import NewUserCon from '../../components/users/NewUserCon';
 import AlumniTable from '../../components/users/AlumniTable';
 import PrintReport from '../../components/users/PrintReport';
+import api from '../api';
 
 export default function Alumni() {
   const [adminUName, setAdminUName] = useState(localStorage.getItem('adminUName'));
@@ -31,7 +32,7 @@ export default function Alumni() {
   }, [adminToken]);
 
   useEffect(() => {
-    axios.get('http://localhost:3001/getAlumni')
+    api.get('/getAlumni')
       .then(response => {
         setAlumni(response.data);
       })

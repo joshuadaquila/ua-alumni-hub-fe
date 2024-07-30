@@ -3,9 +3,9 @@
 @tailwind utilities;
 
 .bg{
-    background: linear-gradient(-45deg, #130047, #001820);
+    background: linear-gradient(-45deg,rgb(25, 0, 0) 0%, rgb(0, 17, 34) 100%);
     background-size: 400% 400%;
-    animation: gradient 30s ease infinite;
+    animation: gradient 20s ease infinite;
     height: 100vh;
   }
   
