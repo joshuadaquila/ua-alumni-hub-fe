@@ -7,15 +7,45 @@ import { faBroadcastTower, faCalendarAlt, faCalendarCheck, faCalendarDay, faGrad
 import { BarChart } from '@mui/x-charts/BarChart';
 import PieChartEvents from '../../components/users/PieChart';
 import { faCalendar } from '@fortawesome/free-regular-svg-icons';
+import { useEffect } from 'react';
+import api from '../api';
 
 function Dashboard() {
   const [adminUName, setAdminUName] = useState(localStorage.getItem('adminUName'));
   const [adminToken, setAdminToken] = useState(localStorage.getItem('adminToken'));
 
+  const [alumni, setAlumni] = useState(0);
+  const [users, setUsers] = useState(0);
+
   const [toggled, setToggle] = useState(true);
   const pushCon = () => {
     setToggle(!toggled);
   }
+
+
+  useEffect(() => {
+    // Fetch events from the server
+    api.get(`/getTotalAlumni`)
+      .then(response => {
+        console.log(response);
+        setAlumni(response.data[0].totalAlumni);
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  }, []);
+
+  useEffect(() => {
+    // Fetch events from the server
+    api.get(`/getTotalUsers`)
+      .then(response => {
+        console.log(response);
+        setUsers(response.data[0].totalUsers);
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  }, []);
   return (
     <div className='minbackground flex w-screen min-h-screen'>
       <div className={`${toggled ? "w-64" : ""}`}>
@@ -37,44 +67,50 @@ function Dashboard() {
             <hr className='border-t-2 border-black mt-2'></hr>
           </div>
 
-          <div className='grid grid-cols-2 p-10 place-content-center w-full'>
+          <div className='grid grid-cols-2 p-10 place-content-center w-full gap-4'>
             {/* first column */}
-            <div>
-              <div className='flex items-end'>
+            <div className='bg-slate-300 p-4 rounded-md shadow-md h-3/5 grid grid-cols-3 gap-4'>
+              <div className='flex flex-col items-center justify-center'>
                 <div className='flex items-center'>
                   <FontAwesomeIcon icon={faGraduationCap} />
                   <p className='text-lg ml-2 mr-2'>Total Alumni</p>
                 </div>
-                <p className='font-bold text-2xl'>561</p>
+                <p className='font-bold text-2xl'>{alumni}</p>
               </div>
 
-              <div className='flex items-end'>
+              <div className='flex flex-col items-center justify-center'>
                 <div className='flex items-center'>
                   <FontAwesomeIcon icon={faUser} />
                   <p className='text-lg ml-2 mr-2'>Total Users</p>
                 </div>
-                <p className='font-bold text-2xl'>561</p>
+                <p className='font-bold text-2xl'>{users}</p>
               </div>
 
-              <div className='flex items-end'>
+              <div className='flex flex-col items-center justify-center'>
                 <div className='flex items-center'>
                   <FontAwesomeIcon icon={faBroadcastTower} />
-                  <p className='text-lg ml-2 mr-2'>Total Message Broadcasted</p>
+                  <p className='text-lg ml-2 mr-2'>Total Messages</p>
                 </div>
                 <p className='font-bold text-2xl'>561</p>
               </div>
 
-              <div className='text-lg'>
-                <BarChart
-                  xAxis={[{ scaleType: 'band', data: ['Alumi', 'Users', 'Messages'] }]}
-                  series={[{ data: [4, 5, 6] }]}
-                  width={500}
-                  height={300}
-                />
+              <div className='flex flex-col items-center justify-center'>
+                <div className='flex items-center'>
+                  <FontAwesomeIcon icon={faBroadcastTower} />
+                  <p className='text-lg ml-2 mr-2'>Total Comments</p>
+                </div>
+                <p className='font-bold text-2xl'>561</p>
               </div>
-              
 
+              <div className='flex flex-col items-center justify-center'>
+                <div className='flex items-center'>
+                  <FontAwesomeIcon icon={faBroadcastTower} />
+                  <p className='text-lg ml-2 mr-2'>Total Survey Responses</p>
+                </div>
+                <p className='font-bold text-2xl'>561</p>
+              </div>
             </div>
+
 
             {/* second column */}
             <div>

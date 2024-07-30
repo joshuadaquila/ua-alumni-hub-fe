@@ -32,9 +32,10 @@ const AdminLogin = ({ handleAdminLogin }) => {
   };
 
   return (
-    <div className="flex flex-col justify-center items-center w-full min-h-screen bg-slate-900">
+    <div className="flex flex-col justify-center items-center w-full min-h-screen bg-slate-900 bg">
       <div className="flex flex-col justify-center items-center mt-4">
-        <h1 className="text-5xl font-bold text-white">ALUMNI ENGAGEMENT HUB</h1>
+        <h1 className="text-5xl font-bold text-white">ALUMNI HUB</h1>
+        <h1 className="text-5xl font-bold text-white">(Alumni Tracer and Engagement Hub)</h1>
         <h3 className="text-white text-2xl">Administrator Control</h3>
         <img src={ualogo} alt="UA Logo" className="mt-4 rounded-full" width={250} />
 
@@ -73,14 +74,8 @@ const AdminLogin = ({ handleAdminLogin }) => {
           </div>
 
           <div className="p-8 flex flex-col items-center">
-            <button
-              type="submit"
-              className={`font-bold rounded-lg text-lg w-48 h-16 bg-[#374151] text-[#ffffff] justify-center ${
-                isLoading ? "" : "btn"
-              }`}
-              disabled={isLoading}
-            >
-              <FontAwesomeIcon icon={faSignIn} /> {isLoading ? <LoadingScreen /> : "Log in"}
+            <button type="submit" className={`font-bold rounded-lg text-lg  w-48 h-16 bg-slate-700 text-[#ffffff] justify-center
+              ${isLoading? "" : "btn"}`} disabled={isLoading}> {isLoading? "":<FontAwesomeIcon icon={faSignIn} /> }{isLoading? <LoadingScreen /> : "Log in" }
             </button>
           </div>
         </form>
