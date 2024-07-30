@@ -8,6 +8,7 @@ import axios from 'axios';
 import io from 'socket.io-client';
 import NotificationCard from '../../components/NotificationCard';
 import EventCardAdmin from '../../components/users/EventCardAdmin';
+import api from '../api';
 
 const socket = io('http://localhost:3001', {
   withCredentials: true
@@ -35,7 +36,7 @@ function Events({ logout }) {
   }, [adminToken]);
 
   useEffect(() => {
-    axios.get('http://localhost:3001/getEvents')
+    api.get('/getEvents')
       .then(response => {
         setEvents(response.data);
       })

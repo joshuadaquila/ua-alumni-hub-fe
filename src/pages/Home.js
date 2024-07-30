@@ -9,6 +9,7 @@ import { faCircleDot, faDotCircle } from '@fortawesome/free-solid-svg-icons';
 import { faBell, faMessage } from '@fortawesome/free-regular-svg-icons';
 import { Link } from 'react-router-dom';
 import Sidebar from '../components/users/Sidebar';
+import api from './api';
 
 const socket = io('http://localhost:3001', {
   withCredentials: true
@@ -29,7 +30,7 @@ function Home({ logout }) {
   }, [token]);
 
   useEffect(() => {
-    axios.get('http://localhost:3001/getEvents')
+    api.get('/getEvents')
       .then(response => {
         setEvents(response.data);
       })
@@ -41,7 +42,7 @@ function Home({ logout }) {
   }, [notification]);
 
   useEffect(() => {
-    axios.get(`http://localhost:3001/getNotifications`)
+    api.get(`/getNotifications`)
       .then(response => {
         setLatestNotif(response.data[0].message);
         console.log(response.data[0].message);
@@ -53,7 +54,7 @@ function Home({ logout }) {
 
   useEffect(() => {
     // Fetch events from the server
-    axios.get(`http://localhost:3001/getMessages/:id`)
+    api.get(`/getMessages/:id`)
       .then(response => {
         setLatestMsg(response.data[0].content);
       })

@@ -11,6 +11,7 @@ import MessageBroadcastCon from '../../components/MessageBroadcastCon';
 import moment from 'moment';
 import NewMessageCon from '../../components/users/NewMessageCon';
 import EditMessageCon from '../../components/users/EditMessageCon';
+import api from '../api';
 
 const socket = io('http://localhost:3001', {
   withCredentials: true
@@ -33,7 +34,7 @@ function AdminMessageBroadcast() {
 
   useEffect(() => {
     // Fetch events from the server
-    axios.get('http://localhost:3001/getMessages')
+    api.get('/getMessages')
       .then(response => {
         setMessage(response.data);
       })

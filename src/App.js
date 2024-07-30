@@ -15,6 +15,7 @@ import MyEvents from './pages/MyEvents';
 import MyProfile from './pages/MyProfile';
 import Dashboard from './pages/users/Dashboard';
 import Users from './pages/users/Users';
+import api from './pages/api';
 
 import 'primereact/resources/themes/saga-blue/theme.css'; // You can choose any other theme
 import 'primereact/resources/primereact.min.css';
@@ -59,7 +60,7 @@ function App() {
 
   const adminlogin = async (username, password) => {
     console.log("logging2");
-    const response = await axios.post('http://localhost:3001/admin/signin', {
+    const response = await api.post('/admin/signin', {
       username,
       password,
     });
