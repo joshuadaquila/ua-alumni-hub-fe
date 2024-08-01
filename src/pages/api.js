@@ -2,7 +2,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: 'http://localhost:3001',
+  baseURL: 'https://ua-alumhi-hub-be.onrender.com',
   withCredentials: true,  // Add this if you need to send cookies with requests
 });
 

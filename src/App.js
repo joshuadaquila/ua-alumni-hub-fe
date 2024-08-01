@@ -23,24 +23,16 @@ import 'primeicons/primeicons.css';
 import Demographic from './pages/users/Demographic';
 import TracerSurvey from './pages/users/TracerSurvey';
 import Alumni from './pages/users/Alumni';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faWarning } from '@fortawesome/free-solid-svg-icons';
 // import 'primeflex/primeflex.css'; // Optional, for additional utilities
-
 
 function App() {
   const [token, setToken] = useState(localStorage.getItem('token'));
   const [uName, setUName] = useState(localStorage.getItem('uName'));
-
   const [adminToken, setAdminToken] = useState(localStorage.getItem('adminToken'));
   const [adminUName, setAdminUName] = useState(localStorage.getItem('adminUName'));
-
-  // useEffect(() => {
-  //   if (token) {
-  //     axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-  //   }
-  //   if (adminToken) {
-  //     axios.defaults.headers.common['Authorization'] = `Bearer ${adminToken}`;
-  //   }
-  // }, [token, adminToken]);
+  const [showMessageBox, setShowMessageBox] = useState(false);
 
   const login = async (email, password) => {
     console.log("logging1");
@@ -76,7 +68,6 @@ function App() {
     localStorage.setItem('adminToken', token);
 
     console.log("admin login", response);
-
   };
 
   const logout = () => {
@@ -93,52 +84,53 @@ function App() {
     localStorage.removeItem('adminUserId');
   };
 
+  useEffect(() => {
+    if (!adminToken) {
+      setShowMessageBox(true);
+    }
+  }, [adminToken]);
+
   return (
     <div className='App flex flex-col justify-center items-center m-0 p-0'>
       <Router>
         <Routes>
-          {/* <Route path="/" element={<Login handleLogin={login} />} />
-          <Route path="/signup" element={<Signup />} />
-          <Route path="/home" element={
-            token ? <Home logout={logout} /> : <Navigate to="/" />
-          } />
-          <Route path="/notifications" element={
-            token ? <MyNotifications /> : <Navigate to="/" />
-          } />
-          <Route path="/messagebroadcast" element={
-            token ? <MessageBroadcast /> : <Navigate to="/" />
-          } />
-          <Route path="/events" element={
-            token ? <MyEvents logout={logout} /> : <Navigate to="/" />
-          } />
-          <Route path="/myprofile" element={
-            token ? <MyProfile logout={logout} /> : <Navigate to="/" />
-          } /> */}
-
           <Route path='/' element={<AdminLogin handleAdminLogin={adminlogin} />} />
           <Route path="/admin/dashboard" element={
-            adminToken ? <Dashboard logout={adminLogout} /> : <Navigate to="/admin/signin" />
+            adminToken ? <Dashboard logout={adminLogout} /> : <Navigate to="/" />
           } />
           <Route path="/admin/users" element={
-            adminToken ? <Users logout={adminLogout} /> : <Navigate to="/admin/signin" />
+            adminToken ? <Users logout={adminLogout} /> : <Navigate to="/" />
           } />
           <Route path="/admin/events" element={
-            adminToken ? <Events logout={adminLogout} /> : <Navigate to="/admin/signin" />
+            adminToken ? <Events logout={adminLogout} /> : <Navigate to="/" />
           } />
           <Route path="/admin/demographic" element={
-            adminToken ? <Demographic logout={adminLogout} /> : <Navigate to="/admin/signin" />
+            adminToken ? <Demographic logout={adminLogout} /> : <Navigate to="/" />
           } />
           <Route path="/admin/survey" element={
-            adminToken ? <TracerSurvey logout={adminLogout} /> : <Navigate to="/admin/signin" />
+            adminToken ? <TracerSurvey logout={adminLogout} /> : <Navigate to="/" />
           } />
           <Route path="/admin/alumni" element={
-            adminToken ? <Alumni logout={adminLogout} /> : <Navigate to="/admin/signin" />
+            adminToken ? <Alumni logout={adminLogout} /> : <Navigate to="/" />
           } />
           <Route path="/admin/messagebroadcast" element={
-            adminToken ? <AdminMessageBroadcast /> : <Navigate to="/admin/signin" />
+            adminToken ? <AdminMessageBroadcast /> : <Navigate to="/" />
           } />
         </Routes>
       </Router>
+      {showMessageBox && (
+        <>
+          <div className="overlay backdrop-blur-sm"></div>
+          <div className="message-box rounded-md">
+            <div className='flex justify-center items-center mb-4'>
+              <FontAwesomeIcon icon={faWarning} color='red' />
+              <p>Your session has expired. Please sign in again!</p>
+            </div>
+            
+            <button onClick={() => setShowMessageBox(false)} className='bg-slate-900 text-white rounded-sm'>OK</button>
+          </div>
+        </>
+      )}
     </div>
   );
 }
