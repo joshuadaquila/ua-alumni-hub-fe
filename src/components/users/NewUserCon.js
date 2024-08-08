@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import LoadingScreen from "../../components/LoadingScreen";
 import io from 'socket.io-client';
+import api from '../../pages/api';
 
 const socket = io('https://ua-alumhi-hub-be.onrender.com', {
   withCredentials: true
@@ -27,7 +28,7 @@ function NewUserCon({ close }) {
     }
     setLoading(true);
     try {
-      const response = await axios.post('http://localhost:3001/addMessage', {
+      const response = await api.post('/admin/signup', {
         username,
         password,
       }, { withCredentials: true });

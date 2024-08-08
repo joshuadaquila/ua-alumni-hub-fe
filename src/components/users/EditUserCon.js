@@ -1,13 +1,9 @@
-import { faCheck, faPaperPlane, faPlane, faPlus, faX, faXmark } from '@fortawesome/free-solid-svg-icons';
+import { faCheck, faXmark } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import LoadingScreen from "../../components/LoadingScreen";
-import io from 'socket.io-client';
-
-const socket = io('https://ua-alumhi-hub-be.onrender.com', {
-  withCredentials: true
-});
+import api from '../../pages/api';
 
 function EditUserCon({ close, userId }) {
   const [username, setUsername] = useState('');
@@ -15,10 +11,18 @@ function EditUserCon({ close, userId }) {
   const [isLoading, setLoading] = useState(false);
   const [errors, setErrors] = useState([]);
 
-  const addMessage = async (event) => {
+  const updateUser = async (event) => {
     event.preventDefault();
 
-    // Validate password
+    // Clear previous errors
+    setErrors([]);
+
+    // Validate inputs
+    if (!username || !password) {
+      setErrors([...errors, "Username and password are required."]);
+      return;
+    }
+
     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
     if (!passwordRegex.test(password)) {
       setErrors([...errors, "Password must be at least 8 characters long, include an uppercase letter, a lowercase letter, a number, and a special character."]);
@@ -27,12 +31,17 @@ function EditUserCon({ close, userId }) {
 
     setLoading(true);
     try {
-      const response = await axios.post('http://localhost:3001/addMessage', {
+      const response = await api.post(`/admin/updateUser/${userId}`, {
         username,
         password,
       }, { withCredentials: true });
-      close();
-      setLoading(false);
+      if (response.status === 200) {
+        close();
+        setLoading(false);
+      } else {
+        setErrors([...errors, 'Failed to update user']);
+        setLoading(false);
+      }
     } catch (error) {
       setErrors([...errors, error.response?.status || "Unknown error"]);
       setLoading(false);
@@ -40,20 +49,18 @@ function EditUserCon({ close, userId }) {
   };
 
   useEffect(() => {
-    
-      const fetchUserDetails = async () => {
-        try {
-          const response = await axios.get(`http://localhost:3001/getUserInfo/${userId}`);
-          setUsername(response.data[0].username);
-          setPassword(''); // Typically you wouldn't fetch and pre-fill the password
-        } catch (error) {
-          setErrors([...errors, error.response?.status || "Failed to fetch user details"]);
-        }
-      };
+    const fetchUserDetails = async () => {
+      try {
+        const response = await api.get(`/getUserInfo/${userId}`);
+        setUsername(response.data.username);
+        // Password should not be pre-filled
+      } catch (error) {
+        setErrors([...errors, error.response?.status || "Failed to fetch user details"]);
+      }
+    };
 
-      fetchUserDetails();
-    
-  }, []);
+    fetchUserDetails();
+  }, [userId]);
 
   return (
     <div className="fixed inset-0 z-50 backdrop-blur-md">
@@ -65,9 +72,9 @@ function EditUserCon({ close, userId }) {
             className='cursor-pointer hover:scale-125' />
         </div>
         
-        <form className='flex flex-col justify-start items-center' onSubmit={addMessage}>
+        <form className='flex flex-col justify-start items-center' onSubmit={updateUser}>
           <h1 className='mb-4 text-2xl font-bold'>EDIT USER</h1>
-          <div className='place-content-center place-items-center'>
+          <div className='flex flex-col items-center'>
             <div className='flex flex-col items-start mt-2'>
               <label className='text-lg ml-2'>Username</label>
               <input
@@ -90,18 +97,18 @@ function EditUserCon({ close, userId }) {
             </div>
           </div>
           {errors.length > 0 && (
-            <div className="text-red-500">
+            <div className="text-red-500 mt-4">
               {errors.map((error, index) => (
                 <p key={index}>{error}</p>
               ))}
             </div>
           )}
-          <button className='bg-slate-900 text-white w-32 h-20 flex justify-center items-center p-4 m-2 rounded-md'>
+          <button className='bg-slate-900 text-white w-32 h-20 flex justify-center items-center p-4 m-2 rounded-md' type="submit">
             {isLoading ? (
               <LoadingScreen />
             ) : (
               <>
-                <FontAwesomeIcon icon={faCheck} className='mr-2' type='submit' />
+                <FontAwesomeIcon icon={faCheck} className='mr-2' />
                 <p>Save</p>
               </>
             )}

@@ -1,4 +1,4 @@
-import { faCheck, faPaperPlane, faPlane, faX, faXmark } from '@fortawesome/free-solid-svg-icons';
+import { faPaperPlane, faXmark } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useState } from 'react';
 import axios from 'axios';
@@ -6,52 +6,39 @@ import LoadingScreen from "../../components/LoadingScreen";
 import io from 'socket.io-client';
 import api from '../../pages/api';
 
+// Ensure the URL matches your backend setup
 const socket = io('https://ua-alumhi-hub-be.onrender.com', {
   withCredentials: true
 });
 
 function NewMessageCon({ close }) {
   const [content, setContent] = useState('');
-  const [description, setDescription] = useState('');
-  
   const [isLoading, setLoading] = useState(false);
   const [errors, setErrors] = useState([]);
 
   const addMessage = async (event) => {
     event.preventDefault();
     setLoading(true);
+
     try {
-      const response = await api.post('/addMessage', {
+      const response = await api.post('/addAdminMessage', {
         content,
       }, { withCredentials: true });
+
+
+      // Emit the message ID or other relevant data to the server
+      socket.emit('messageNotification', {
+        insertId: response.data.insertId, // Ensure this matches your server's expected data
+        content
+      });
+
+      setContent('');
       setLoading(false);
-      sendNotification(content);
-      
+
     } catch (error) {
       setErrors([...errors, error.response?.status || "Unknown error"]);
       setLoading(false);
     }
-  };
-  
-  const sendNotification = (title) => {
-    const type = "message";
-    const message = `New Message: ${title}`;
-  
-    // Emit the notification to the socket
-    socket.emit('messageNotification', message);
-  
-    // Send the notification to the backend to store it
-    api.post('/addNotification', {
-      title,
-      message,
-      type
-    })
-    .then(response => {
-      console.log('Notification added successfully:', response.data);
-    })
-    .catch(error => {
-      console.error('Error adding notification:', error);
-    });
   };
 
   return (
@@ -71,12 +58,12 @@ function NewMessageCon({ close }) {
               onChange={(e) => setContent(e.target.value)}
               required
             />
-            <button className='bg-slate-900 text-white w-32 h-20 flex justify-center items-center p-4 ml-2 rounded-md'>
+            <button type='submit' className='bg-slate-900 text-white w-32 h-20 flex justify-center items-center p-4 ml-2 rounded-md'>
               {isLoading ? (
                 <LoadingScreen />
               ) : (
                 <>
-                  <FontAwesomeIcon icon={faPaperPlane} className='mr-2' type='submit' />
+                  <FontAwesomeIcon icon={faPaperPlane} className='mr-2' />
                   <p>Send</p>
                 </>
               )}

@@ -1,16 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import Sidebar from '../../components/users/Sidebar';
-import EventCard from '../../components/EventCard';
 import UserHeader from '../../components/users/UserHeader';
-import AddBtn from '../../components/users/AddBtn';
-import NewEventCon from '../../components/users/NewEventCon';
 import axios from 'axios';
 import io from 'socket.io-client';
 import NotificationCard from '../../components/NotificationCard';
 import MessageBroadcastCon from '../../components/MessageBroadcastCon';
 import moment from 'moment';
 import NewMessageCon from '../../components/users/NewMessageCon';
-import EditMessageCon from '../../components/users/EditMessageCon';
 import api from '../api';
 
 const socket = io('https://ua-alumhi-hub-be.onrender.com', {
@@ -19,12 +15,10 @@ const socket = io('https://ua-alumhi-hub-be.onrender.com', {
 
 function AdminMessageBroadcast() {
   const [adminToken, setAdminToken] = useState(localStorage.getItem('adminToken'));
-
   const [toggled, setToggle] = useState(true);
   const [addMessageCon, setAddMessageCon] = useState(true);
-  const [message, setMessage] = useState([]); // initialize an empty array to store events
+  const [messages, setMessages] = useState([]); // initialize an empty array to store messages
   const [notification, setNotification] = useState(null);
-  
 
   useEffect(() => {
     if (adminToken) {
@@ -33,33 +27,33 @@ function AdminMessageBroadcast() {
   }, [adminToken]);
 
   useEffect(() => {
-    // Fetch events from the server
+    // Fetch messages from the server
     api.get('/getMessages')
       .then(response => {
-        setMessage(response.data);
+        setMessages(response.data);
       })
       .catch(error => {
         console.error(error);
       });
-
-    
   }, [notification]);
 
+  useEffect(() => {
+    // Set up Socket.io event listener for new messages
+    socket.on('messageNotification', (msg) => {
+      console.log("Received message:", msg);
 
+      // Add the new message to the existing list
+      setMessages(prevMessages => [msg, ...prevMessages]);
+    });
 
-  const pushCon = () => {
-    setToggle(!toggled);
-  }
-
-  // Handle add event button click
-  const handleAddEvent = () => {
-    // console.log("cliked");
-    setAddMessageCon(!addMessageCon);
-  }
-
+    // Clean up Socket.io event listeners on component unmount
+    return () => {
+      socket.off('messageNotification');
+    };
+  }, [socket]);
 
   useEffect(() => {
-    // Set up Socket.io event listener
+    // Set up Socket.io event listener for notifications
     socket.on('eventNotification', (msg) => {
       setNotification(msg);
     });
@@ -68,46 +62,48 @@ function AdminMessageBroadcast() {
     return () => {
       socket.off('eventNotification');
     };
-  }, [socket])
-  setTimeout(() => setNotification(null), 8000);
+  }, [socket]);
 
-  console.log(message);
+  // Handle toggle of sidebar
+  const pushCon = () => {
+    setToggle(!toggled);
+  };
+
+  // Handle add message button click
+  const handleAddEvent = () => {
+    setAddMessageCon(!addMessageCon);
+  };
 
   return (
     <div className='minbackground flex w-screen min-h-screen'>
-      
       <div className={`${toggled ? "w-64" : ""}`}>
         <Sidebar handleClick={pushCon} />
       </div>
       <div className='p-4 flex-1 w-full flex flex-col items-center'>
-      <div className='flex justify-center items-start'>
+        <div className='flex justify-start items-start'>
           <UserHeader />
         </div>
 
-        <div className='w-[70%] flex flex-col justify-center items-center  mt-[6rem] relative'>
-          <div className='flex items-end justify-end w-full'>
- 
-          </div>
+        <div className='w-[50%] flex flex-col justify-start items-center mt-[6rem] relative'>
           <h1 className='mb-4 text-2xl font-bold'>COMMUNITY CHAT</h1>
-          { notification ? <NotificationCard content={notification} show={true} /> : <NotificationCard content={notification} show={false} /> }
+          {notification && <NotificationCard content={notification} show={true} />}
           {addMessageCon && <NewMessageCon close={handleAddEvent} />}
-          {message.map(message => (
+          {messages.map(message => (
             <MessageBroadcastCon
-              id = {message.messageid}
+              id={message.messageid}
               key={message.messageid}
-              username={message.username}
+              username={message.name}
               usertype={message.usertype}
               date={moment(message.date).format('YYYY-MM-DD HH:mm')}
               content={message.content}
+              photo={message.photourl}
               accessing={"user"} 
             />
           ))}
-
-
         </div>
       </div>
     </div>
-  )
+  );
 }
 
-export default AdminMessageBroadcast
+export default AdminMessageBroadcast;

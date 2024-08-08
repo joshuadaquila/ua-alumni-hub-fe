@@ -8,6 +8,8 @@ import { BarChart } from '@mui/x-charts/BarChart';
 import PieChartEvents from '../../components/users/PieChart';
 import { faCalendar } from '@fortawesome/free-regular-svg-icons';
 import CivilStatus from '../../components/users/demographic_charts/CivilStatus';
+import { useEffect } from 'react';
+import api from '../api';
 
 function Demographic() {
   const [adminUName, setAdminUName] = useState(localStorage.getItem('adminUName'));
@@ -17,6 +19,19 @@ function Demographic() {
   const pushCon = () => {
     setToggle(!toggled);
   }
+
+  useEffect(() => {
+    // Fetch events from the server
+    api.get(`/getMode`)
+      .then(response => {
+        console.log(response);
+        // setAlumni(response.data[0].totalAlumni);
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  }, []);
+
   return (
     <div className='minbackground flex w-screen min-h-screen'>
       <div className={`${toggled ? "w-64" : ""}`}>
