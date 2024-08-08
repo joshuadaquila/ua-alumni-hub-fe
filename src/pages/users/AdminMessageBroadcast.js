@@ -13,7 +13,7 @@ import NewMessageCon from '../../components/users/NewMessageCon';
 import EditMessageCon from '../../components/users/EditMessageCon';
 import api from '../api';
 
-const socket = io('http://localhost:3001', {
+const socket = io('https://ua-alumhi-hub-be.onrender.com', {
   withCredentials: true
 });
 

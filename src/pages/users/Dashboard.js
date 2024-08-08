@@ -3,19 +3,29 @@ import UserHeader from '../../components/users/UserHeader';
 import Sidebar from '../../components/users/Sidebar';
 import { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBroadcastTower, faCalendarAlt, faCalendarCheck, faCalendarDay, faGraduationCap, faHand, faUser } from '@fortawesome/free-solid-svg-icons';
+import { faBroadcastTower, faCalendarAlt, faCalendarCheck, faCalendarDay, faFeed, faGraduationCap, faHand, faKeyboard, faMessage, faNewspaper, faUser } from '@fortawesome/free-solid-svg-icons';
 import { BarChart } from '@mui/x-charts/BarChart';
 import PieChartEvents from '../../components/users/PieChart';
 import { faCalendar } from '@fortawesome/free-regular-svg-icons';
 import { useEffect } from 'react';
 import api from '../api';
+import axios from 'axios';
 
-function Dashboard() {
+function Dashboard({ logout }) {
   const [adminUName, setAdminUName] = useState(localStorage.getItem('adminUName'));
   const [adminToken, setAdminToken] = useState(localStorage.getItem('adminToken'));
 
   const [alumni, setAlumni] = useState(0);
   const [users, setUsers] = useState(0);
+  const [message, setMessage] = useState(0);
+  const [post, setPost] = useState(0);
+  const [comment, setComment] = useState(0);
+  const [survey, setSurvey] = useState(0);
+
+  const [event, setEvent] = useState(0);
+  const [happening, setHappening] = useState(0);
+  const [future, setFuture] = useState(0);
+  const [past, setPast] = useState(0);
 
   const [toggled, setToggle] = useState(true);
   const pushCon = () => {
@@ -27,8 +37,38 @@ function Dashboard() {
     // Fetch events from the server
     api.get(`/getTotalAlumni`)
       .then(response => {
-        console.log(response);
+        // console.log(response);
         setAlumni(response.data[0].totalAlumni);
+      })
+      .catch(error => {
+        console.error(error);
+        if (error.response.status === 401){
+          logout();
+        }
+      });
+  }, []);
+
+  useEffect(() => {
+    // Fetch events from the server
+    api.get(`/getTotalMessage`)
+      .then(response => {
+        // console.log(response);
+        setMessage(response.data[0].totalMessage);
+      })
+      .catch(error => {
+        console.error(error);
+        if (error.response.status === 401){
+          logout();
+        }
+      });
+  }, []);
+
+  useEffect(() => {
+    // Fetch events from the server
+    api.get(`/getTotalUsers`)
+      .then(response => {
+        // console.log(response);
+        setUsers(response.data[0].totalUsers);
       })
       .catch(error => {
         console.error(error);
@@ -37,10 +77,82 @@ function Dashboard() {
 
   useEffect(() => {
     // Fetch events from the server
-    api.get(`/getTotalUsers`)
+    api.get(`/getTotalPost`)
+      .then(response => {
+        // console.log(response);
+        setPost(response.data[0].totalPost);
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  }, []);
+
+  useEffect(() => {
+    // Fetch events from the server
+    api.get(`/getTotalComment`)
+      .then(response => {
+        // console.log(response);
+        setComment(response.data[0].totalComment);
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  }, []);
+
+  useEffect(() => {
+    // Fetch events from the server
+    api.get(`/getTotalResponses`)
+      .then(response => {
+        // console.log(response);
+        setSurvey(response.data[0].totalResponse);
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  }, []);
+
+  useEffect(() => {
+    // Fetch events from the server
+    api.get(`/getTotalEvent`)
+      .then(response => {
+        // console.log(response);
+        setEvent(response.data[0].totalEvent);
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  }, []);
+
+  useEffect(() => {
+    // Fetch events from the server
+    api.get(`/getTotalEventHap`)
       .then(response => {
         console.log(response);
-        setUsers(response.data[0].totalUsers);
+        setHappening(response.data[0].totalEvent);
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  }, []);
+
+  useEffect(() => {
+    // Fetch events from the server
+    api.get(`/getTotalEventFuture`)
+      .then(response => {
+        // console.log(response);
+        setFuture(response.data[0].totalEvent);
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  }, []);
+
+  useEffect(() => {
+    // Fetch events from the server
+    api.get(`/getTotalEventPast`)
+      .then(response => {
+        // console.log(response);
+        setPast(response.data[0].totalEvent);
       })
       .catch(error => {
         console.error(error);
@@ -88,26 +200,34 @@ function Dashboard() {
 
               <div className='flex flex-col items-center justify-center'>
                 <div className='flex items-center'>
-                  <FontAwesomeIcon icon={faBroadcastTower} />
+                  <FontAwesomeIcon icon={faMessage} />
                   <p className='text-lg ml-2 mr-2'>Total Messages</p>
                 </div>
-                <p className='font-bold text-2xl'>561</p>
+                <p className='font-bold text-2xl'>{message}</p>
               </div>
 
               <div className='flex flex-col items-center justify-center'>
                 <div className='flex items-center'>
-                  <FontAwesomeIcon icon={faBroadcastTower} />
+                  <FontAwesomeIcon icon={faFeed} />
+                  <p className='text-lg ml-2 mr-2'>Total Posts</p>
+                </div>
+                <p className='font-bold text-2xl'>{post}</p>
+              </div>
+
+              <div className='flex flex-col items-center justify-center'>
+                <div className='flex items-center'>
+                  <FontAwesomeIcon icon={faKeyboard} />
                   <p className='text-lg ml-2 mr-2'>Total Comments</p>
                 </div>
-                <p className='font-bold text-2xl'>561</p>
+                <p className='font-bold text-2xl'>{comment}</p>
               </div>
 
               <div className='flex flex-col items-center justify-center'>
                 <div className='flex items-center'>
-                  <FontAwesomeIcon icon={faBroadcastTower} />
+                  <FontAwesomeIcon icon={faNewspaper} />
                   <p className='text-lg ml-2 mr-2'>Total Survey Responses</p>
                 </div>
-                <p className='font-bold text-2xl'>561</p>
+                <p className='font-bold text-2xl'>{survey}</p>
               </div>
             </div>
 
@@ -119,7 +239,7 @@ function Dashboard() {
                   <FontAwesomeIcon icon={faCalendarAlt} />
                   <p className='text-lg ml-2 mr-2 font-bold'>Total Events</p>
                 </div>
-                <p className='font-bold text-2xl'>561</p>
+                <p className='font-bold text-2xl'>{event}</p>
               </div>
 
               <div className='flex items-end'>
@@ -127,7 +247,7 @@ function Dashboard() {
                   <FontAwesomeIcon icon={faCalendarDay} />
                   <p className='text-lg ml-2 mr-2'>Happening</p>
                 </div>
-                <p className='font-bold text-2xl'>561</p>
+                <p className='font-bold text-2xl'>{happening}</p>
               </div>
 
               <div className='flex items-end'>
@@ -135,7 +255,7 @@ function Dashboard() {
                   <FontAwesomeIcon icon={faCalendar} />
                   <p className='text-lg ml-2 mr-2'>Future</p>
                 </div>
-                <p className='font-bold text-2xl'>561</p>
+                <p className='font-bold text-2xl'>{future}</p>
               </div>
 
               <div className='flex items-end'>
@@ -143,15 +263,13 @@ function Dashboard() {
                   <FontAwesomeIcon icon={faCalendarCheck} />
                   <p className='text-lg ml-2 mr-2'>Past</p>
                 </div>
-                <p className='font-bold text-2xl'>561</p>
+                <p className='font-bold text-2xl'>{past}</p>
               </div>
 
               <div className='text-lg'>
-                <PieChartEvents happening={25} future={45} past={15} />
+                <PieChartEvents happening={happening} future={future} past={past} />
               </div>
             </div>
-
-
           </div>
         </div>
       </div>

@@ -19,14 +19,19 @@ const AdminLogin = ({ handleAdminLogin }) => {
     event.preventDefault();
     try {
       setLoading(true);
-      await handleAdminLogin(username, password);
-      navigate('/admin/dashboard');
+      const response = await handleAdminLogin(username, password);
+      if (response.status === 200) {
+        navigate('/admin/dashboard');
+      } else {
+        setError(`Unexpected response status: ${response.status}`);
+      }
     } catch (error) {
       setError(error.response?.status || "Unknown error");
+    } finally {
       setLoading(false);
     }
   };
-
+  
   const togglePasswordVisibility = () => {
     setPasswordVisible(!passwordVisible);
   };

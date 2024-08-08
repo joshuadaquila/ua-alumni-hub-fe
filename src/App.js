@@ -34,28 +34,14 @@ function App() {
   const [adminUName, setAdminUName] = useState(localStorage.getItem('adminUName'));
   const [showMessageBox, setShowMessageBox] = useState(false);
 
-  const login = async (email, password) => {
-    console.log("logging1");
-    const response = await axios.post('http://localhost:3001/signin', {
-      email,
-      password
-    });
-    console.log("response", response);
-    const token = response.data.token;
-    const uName = response.data.name;
-
-    setToken(token);
-    localStorage.setItem('token', token);
-    localStorage.setItem('uName', uName);
-    setUName(uName);
-  };
-
   const adminlogin = async (username, password) => {
     console.log("logging2");
     const response = await api.post('/admin/signin', {
       username,
       password,
     });
+
+    
 
     const token = response.data.token;
     const uName = response.data.username;
@@ -68,6 +54,10 @@ function App() {
     localStorage.setItem('adminToken', token);
 
     console.log("admin login", response);
+    if (response.status === 200 && response.data.token) {
+      api.setAdminToken(response.data.token); // Set the token if login is successful
+    }
+    return response;
   };
 
   const logout = () => {

@@ -59,7 +59,7 @@ export default function Alumni() {
           </div>
           {showUserCon && <NewUserCon close={handleNewUserCon} />}
 
-          <PrintReport>
+          <PrintReport title={"Alumni Table"}>
             <AlumniTable alumniData={alumni} />
           </PrintReport>
         </div>

@@ -1,0 +1,56 @@
+/* styles.css */
+
+/* Print styles */
+@media print {
+  @page {
+    size: landscape; /* Set paper orientation to landscape */
+    margin: 20mm; /* Set margins if needed */
+  }
+
+  .print-container {
+    padding: 20px;
+    box-sizing: border-box;
+  }
+  
+  .print-header {
+    font-size: 24px;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .print-content {
+    margin: 0 auto;
+    max-width: 100%; /* Ensure content width is responsive */
+  }
+  
+  table {
+    width: 100%; /* Ensure table fits within the page width */
+    border-collapse: collapse; /* Ensure borders collapse into a single line */
+    page-break-inside: auto; /* Allow page breaks inside the table */
+  }
+
+  th, td {
+    border: 1px solid #000; /* Add border for visibility */
+    padding: 8px; /* Add padding for readability */
+    text-align: left;
+    word-wrap: break-word; /* Ensure text wraps within cells */
+  }
+
+  thead {
+    display: table-header-group; /* Ensure table headers repeat on each page */
+  }
+
+  tfoot {
+    display: table-footer-group; /* Ensure table footers repeat on each page if needed */
+  }
+
+  /* Prevent page break within rows */
+  tr {
+    page-break-inside: avoid;
+  }
+
+  /* Hide non-print elements */
+  .print-hidden {
+    display: none;
+  }
+}

@@ -10,7 +10,7 @@ import NotificationCard from '../../components/NotificationCard';
 import EventCardAdmin from '../../components/users/EventCardAdmin';
 import api from '../api';
 
-const socket = io('http://localhost:3001', {
+const socket = io('https://ua-alumhi-hub-be.onrender.com', {
   withCredentials: true
 });
 
@@ -43,43 +43,43 @@ function Events({ logout }) {
       .catch(error => {
         console.log("error in home get events");
         console.error(error);
-        logout();
+        // logout();
       });
   }, [notification]);
 
   useEffect(() => {
-    axios.get('http://localhost:3001/getPastEvents')
+    api.get('/getPastEvents')
       .then(response => {
         setPastEvents(response.data);
       })
       .catch(error => {
         console.log("error in home get events");
         console.error(error);
-        logout();
+        // logout();
       });
   }, []);
 
   useEffect(() => {
-    axios.get('http://localhost:3001/getFutureEvents')
+    api.get('/getFutureEvents')
       .then(response => {
         setFutureEvents(response.data);
       })
       .catch(error => {
         console.log("error in home get events");
         console.error(error);
-        logout();
+        // logout();  
       });
   }, []);
 
   useEffect(() => {
-    axios.get('http://localhost:3001/getHappeningEvents')
+    api.get('/getHappeningEvents')
       .then(response => {
         setHappeningEvents(response.data);
       })
       .catch(error => {
         console.log("error in home get events");
         console.error(error);
-        logout();
+        // logout();
       });
   }, []);
 

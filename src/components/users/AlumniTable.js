@@ -58,7 +58,8 @@ export default function AlumniTable({ alumniData }) {
     const header = renderHeader();
 
     const formatBirthday = (rowData) => {
-        return format(new Date(rowData.birthday), 'MMMM d, yyyy');
+        const date = new Date(rowData.birthday);
+        return isNaN(date.getTime()) ? 'Invalid Date' : format(date, 'MMMM d, yyyy');
     };
 
     return (

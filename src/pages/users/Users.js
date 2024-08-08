@@ -9,6 +9,7 @@ import axios from 'axios';
 import NewUserCon from '../../components/users/NewUserCon';
 import EditUserCon from '../../components/users/EditUserCon';
 import api from '../api';
+import PrintReport from '../../components/users/PrintReport';
 
 function Users() {
   const [adminUName, setAdminUName] = useState(localStorage.getItem('adminUName'));
@@ -63,7 +64,10 @@ function Users() {
           </div>
           {showUserCon && <NewUserCon close={handleNewUserCon} /> }
 
-          <UsersTable usersData={users}/>
+          
+          <PrintReport title={"User Table"}>
+            <UsersTable usersData={users}/>
+          </PrintReport>
         </div>
       </div>
     </div>

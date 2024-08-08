@@ -6,7 +6,7 @@ import LoadingScreen from "../../components/LoadingScreen";
 import io from 'socket.io-client';
 import { useEffect } from 'react';
 
-const socket = io('http://localhost:3001', {
+const socket = io('https://ua-alumhi-hub-be.onrender.com', {
   withCredentials: true
 });
 

@@ -4,8 +4,9 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import LoadingScreen from "../../components/LoadingScreen";
 import io from 'socket.io-client';
+import api from '../../pages/api';
 
-const socket = io('http://localhost:3001', {
+const socket = io('https://ua-alumhi-hub-be.onrender.com', {
   withCredentials: true
 });
 
@@ -20,7 +21,7 @@ function NewMessageCon({ close }) {
     event.preventDefault();
     setLoading(true);
     try {
-      const response = await axios.post('http://localhost:3001/addMessage', {
+      const response = await api.post('/addMessage', {
         content,
       }, { withCredentials: true });
       setLoading(false);
@@ -40,7 +41,7 @@ function NewMessageCon({ close }) {
     socket.emit('messageNotification', message);
   
     // Send the notification to the backend to store it
-    axios.post('http://localhost:3001/addNotification', {
+    api.post('/addNotification', {
       title,
       message,
       type
