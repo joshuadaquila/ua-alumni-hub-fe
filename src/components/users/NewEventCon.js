@@ -5,6 +5,7 @@ import axios from 'axios';
 import LoadingScreen from "../../components/LoadingScreen";
 import io from 'socket.io-client';
 import { useEffect } from 'react';
+import api from '../../pages/api'
 
 const socket = io('https://ua-alumhi-hub-be.onrender.com', {
   withCredentials: true
@@ -36,7 +37,7 @@ function NewEventCon({ close }) {
     event.preventDefault();
     setLoading(true);
     try {
-      const response = await axios.post('http://localhost:3001/addEvent', {
+      const response = await api.post('/addEvent', {
         title,
         description,
         date,
@@ -63,7 +64,7 @@ function NewEventCon({ close }) {
     socket.emit('eventNotification', message);
   
     // Send the notification to the backend to store it
-    axios.post('http://localhost:3001/addNotification', {
+    api.post('/addNotification', {
       title,
       message,
       type

@@ -35,129 +35,29 @@ function Dashboard({ logout }) {
 
   useEffect(() => {
     // Fetch events from the server
-    api.get(`/getTotalAlumni`)
-      .then(response => {
-        // console.log(response);
-        setAlumni(response.data[0].totalAlumni);
-      })
-      .catch(error => {
-        console.error(error);
-        if (error.response.status === 401){
-          logout();
-        }
-      });
-  }, []);
-
-  useEffect(() => {
-    // Fetch events from the server
-    api.get(`/getTotalMessage`)
-      .then(response => {
-        // console.log(response);
-        setMessage(response.data[0].totalMessage);
-      })
-      .catch(error => {
-        console.error(error);
-        if (error.response.status === 401){
-          logout();
-        }
-      });
-  }, []);
-
-  useEffect(() => {
-    // Fetch events from the server
-    api.get(`/getTotalUsers`)
-      .then(response => {
-        // console.log(response);
-        setUsers(response.data[0].totalUsers);
-      })
-      .catch(error => {
-        console.error(error);
-      });
-  }, []);
-
-  useEffect(() => {
-    // Fetch events from the server
-    api.get(`/getTotalPost`)
-      .then(response => {
-        // console.log(response);
-        setPost(response.data[0].totalPost);
-      })
-      .catch(error => {
-        console.error(error);
-      });
-  }, []);
-
-  useEffect(() => {
-    // Fetch events from the server
-    api.get(`/getTotalComment`)
-      .then(response => {
-        // console.log(response);
-        setComment(response.data[0].totalComment);
-      })
-      .catch(error => {
-        console.error(error);
-      });
-  }, []);
-
-  useEffect(() => {
-    // Fetch events from the server
-    api.get(`/getTotalResponses`)
-      .then(response => {
-        // console.log(response);
-        setSurvey(response.data[0].totalResponse);
-      })
-      .catch(error => {
-        console.error(error);
-      });
-  }, []);
-
-  useEffect(() => {
-    // Fetch events from the server
-    api.get(`/getTotalEvent`)
-      .then(response => {
-        // console.log(response);
-        setEvent(response.data[0].totalEvent);
-      })
-      .catch(error => {
-        console.error(error);
-      });
-  }, []);
-
-  useEffect(() => {
-    // Fetch events from the server
-    api.get(`/getTotalEventHap`)
+    api.get(`/getDashboardStats`)
       .then(response => {
         console.log(response);
-        setHappening(response.data[0].totalEvent);
+        setAlumni(response.data[0].totalAlumni);
+        setUsers(response.data[0].totalUsers)
+        setMessage(response.data[0].totalMessage);
+        setPost(response.data[0].totalPost)
+        setComment(response.data[0].totalComment)
+        setSurvey(response.data[0].totalResponse);
+        setEvent(response.data[0].totalEvent);
+        setHappening(response.data[0].totalEventHap);
+        setFuture(response.data[0].totalEventFuture);
+        setPast(response.data[0].totalEventPast);
       })
       .catch(error => {
         console.error(error);
+        if (error.response.status === 401){
+          logout();
+        }
       });
   }, []);
 
-  useEffect(() => {
-    // Fetch events from the server
-    api.get(`/getTotalEventFuture`)
-      .then(response => {
-        // console.log(response);
-        setFuture(response.data[0].totalEvent);
-      })
-      .catch(error => {
-        console.error(error);
-      });
-  }, []);
-
-  useEffect(() => {
-    // Fetch events from the server
-    api.get(`/getTotalEventPast`)
-      .then(response => {
-        // console.log(response);
-        setPast(response.data[0].totalEvent);
-      })
-      .catch(error => {
-        console.error(error);
-      });
-  }, []);
+  
   return (
     <div className='minbackground flex w-screen min-h-screen'>
       <div className={`${toggled ? "w-64" : ""}`}>

@@ -96,13 +96,34 @@ export default function SurveyTable({ surveyData }) {
     );
 
     const handlePrint = () => {
-        const printContents = printRef.current.innerHTML;
-        const originalContents = document.body.innerHTML;
-
-        document.body.innerHTML = printContents;
-        window.print();
-        document.body.innerHTML = originalContents;
+        const printWindow = window.open('', '_blank');
+        printWindow.document.write(`
+            <html>
+                <head>
+                    <title>Print</title>
+                    <style>
+                        body { font-family: Arial, sans-serif; padding: 20px; }
+                        .my-4 { margin: 1.5rem 0; }
+                        .text-lg { font-size: 1.125rem; }
+                        .font-bold { font-weight: bold; }
+                        table { width: 100%; border-collapse: collapse; margin-bottom: 1rem; }
+                        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+                        th { background-color: #f4f4f4; }
+                    </style>
+                </head>
+                <body>
+                    ${printRef.current.innerHTML}
+                </body>
+            </html>
+        `);
+        printWindow.document.close();
+        printWindow.focus();
+        printWindow.print();
+        printWindow.close();
     };
+    
+
+    console.log(dialogVisible);
 
     return (
         <div className="card">
