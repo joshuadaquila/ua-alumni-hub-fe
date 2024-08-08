@@ -32,6 +32,18 @@ function Demographic() {
       });
   }, []);
 
+  useEffect(() => {
+    // Fetch events from the server
+    api.get(`/getCounts`)
+      .then(response => {
+        console.log(response);
+        // setAlumni(response.data[0].totalAlumni);
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  }, []);
+
   return (
     <div className='minbackground flex w-screen min-h-screen'>
       <div className={`${toggled ? "w-64" : ""}`}>
