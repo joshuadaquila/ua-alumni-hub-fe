@@ -212,6 +212,15 @@ function Demographic() {
                     </div>
                   </div>
                   {categoryCounts['Residence'] && renderPieChart(categoryCounts['Residence'])}
+
+                  <div className='flex items-end mb-4'>
+                    <div className='flex items-center'>
+                      <FontAwesomeIcon icon={faHouse} />
+                      <p className='text-lg ml-2 mr-2'>Mode Graduation Year: {modeMetrics['Mode Graduation Year']}</p>
+                    </div>
+                  </div>
+                  {console.log(categoryCounts)}
+                  {categoryCounts['Graduation Year'] && renderPieChart(categoryCounts['Graduation Year'])}
                 </div>
               </div>
             </div>

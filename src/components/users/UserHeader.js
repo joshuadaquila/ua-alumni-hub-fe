@@ -35,10 +35,6 @@ function UserHeader({ page, getEvents }) {
           <FontAwesomeIcon size='xl' icon={faCalendarCheck} />
           <p className='text-lg ml-2'>Past</p>
         </div>
-        <div className='bg-opacity-50 homebtn flex flex-row justify-center items-center rounded-md max-h-svh cursor-pointer shadow-md p-2'>
-          <FontAwesomeIcon size='xl' icon={faChartLine} />
-          <p className='text-lg ml-2'>Insights</p>
-        </div>
       </div>
 
       <div className={`flex relative items-center ${page === "event" ? "" : "col-start-3"}`}>
