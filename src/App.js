@@ -25,6 +25,7 @@ import TracerSurvey from './pages/users/TracerSurvey';
 import Alumni from './pages/users/Alumni';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faWarning } from '@fortawesome/free-solid-svg-icons';
+import Employment from './pages/users/Employment';
 // import 'primeflex/primeflex.css'; // Optional, for additional utilities
 
 function App() {
@@ -97,6 +98,11 @@ function App() {
           <Route path="/admin/demographic" element={
             adminToken ? <Demographic logout={adminLogout} /> : <Navigate to="/" />
           } />
+
+          <Route path="/admin/employment" element={
+            adminToken ? <Employment logout={adminLogout} /> : <Navigate to="/" />
+          } />
+
           <Route path="/admin/survey" element={
             adminToken ? <TracerSurvey logout={adminLogout} /> : <Navigate to="/" />
           } />
