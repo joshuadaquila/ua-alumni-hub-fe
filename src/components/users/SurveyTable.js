@@ -155,7 +155,7 @@ export default function SurveyTable({ surveyData }) {
                                     return formatJSON(rowData[key]);
                                 }
                                 // Apply JSON formatting for other columns if expected to have JSON data
-                                if (key !== 'reason' && isValidJSON(rowData[key])) {
+                                if (key !== 'reason' && key!== 'skillsaquiredincollege' && isValidJSON(rowData[key])) {
                                     return formatJSON(rowData[key]);
                                 }
                                 return rowData[key]; // Default rendering for non-JSON columns
