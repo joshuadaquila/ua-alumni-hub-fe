@@ -81,7 +81,7 @@ function Dashboard({ logout }) {
 
           <div className='grid grid-cols-2 p-10 place-content-center w-full gap-4'>
             {/* first column */}
-            <div className='bg-slate-300 p-4 rounded-md shadow-md h-3/5 grid grid-cols-3 gap-4'>
+            <div className='bg-white p-4 rounded-md shadow-md h-3/5 grid grid-cols-3 gap-4'>
               <div className='flex flex-col items-center justify-center'>
                 <div className='flex items-center'>
                   <FontAwesomeIcon icon={faGraduationCap} />

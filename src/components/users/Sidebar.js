@@ -20,11 +20,11 @@ const Sidebar = ({ handleClick }) => {
           <FontAwesomeIcon icon={faBars} className=" text-2xl " onClick={handleTrigger} />
         </Link>
         
-        <nav className={`absolute top-0 left-0 h-screen w-64 bg-slate-900
+        <nav className={`absolute top-0 left-0 h-screen w-64 bg-red-950
          text-white transition opacity duration-300 ease-in-out shadow-md ${sidebar ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-full"}`}>
           <div className="flex flex-col justify-center items-center ">
             <img src={ualogo} className="rounded-full p-12 "/>
-            <p className="text-xl font-bold p-4">Alumni Hub</p>
+            <p className="text-xl font-bold p-4">ALUMNI ENGAGEMENT HUB</p>
           </div>
           <ul className="flex flex-col py-4 text-left">
             <li className="nav-item m-2 hover:bg-white hover:text-black">

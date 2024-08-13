@@ -37,17 +37,17 @@ const AdminLogin = ({ handleAdminLogin }) => {
   };
 
   return (
-    <div className="flex flex-col justify-center items-center w-full min-h-screen bg-slate-900 bg">
+    <div className="flex flex-col justify-center items-center w-full min-h-screen bg-red-950">
       <div className="flex flex-col justify-center items-center mt-4">
         <h1 className="text-5xl font-bold text-white">ALUMNI HUB</h1>
         <h1 className="text-5xl font-bold text-white">(Alumni Tracer and Engagement Hub)</h1>
         <h3 className="text-white text-2xl">Administrator Control</h3>
         <img src={ualogo} alt="UA Logo" className="mt-4 rounded-full" width={250} />
 
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} className="bg-white rounded-md m-2 shadow-md">
           <div className="p-8 flex flex-col items-center">
             <input
-              className="text-xl rounded-md p-2 w-80 outline-none"
+              className="text-xl p-2 w-80 outline-none border bg-slate-200"
               placeholder="Username"
               type="text"
               required
@@ -59,7 +59,7 @@ const AdminLogin = ({ handleAdminLogin }) => {
             />
             <div className="relative mt-4 w-80">
               <input
-                className="text-xl rounded-md p-2 w-full outline-none"
+                className="text-xl p-2 w-80 outline-none border bg-slate-200"
                 placeholder="Password"
                 type={passwordVisible ? "text" : "password"}
                 required
@@ -78,7 +78,7 @@ const AdminLogin = ({ handleAdminLogin }) => {
             </div>
           </div>
 
-          <div className="p-8 flex flex-col items-center">
+          <div className="p-4 flex flex-col items-center">
             <button
               type="submit"
               className={`font-bold rounded-lg text-lg w-48 h-16 bg-[#374151] text-[#ffffff] justify-center ${

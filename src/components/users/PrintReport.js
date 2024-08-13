@@ -54,7 +54,7 @@ const PrintReport = ({ children, title }) => {
 
   return (
     <div className='flex flex-col items-end'>
-      <div className='bg-blue-400 bg-opacity-50 pt-4 pb-4 flex justify-center 
+      <div className='bg-red-950 text-white pt-4 pb-4 flex justify-center 
       items-center rounded-full shadow-md w-16 mb-4 mr-4 cursor-pointer btn no-print'
       onClick={handlePrint}>
         <FontAwesomeIcon icon={faPrint} />

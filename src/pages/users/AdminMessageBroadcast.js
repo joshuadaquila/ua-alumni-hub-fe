@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Sidebar from '../../components/users/Sidebar';
 import UserHeader from '../../components/users/UserHeader';
 import axios from 'axios';
@@ -17,8 +17,10 @@ function AdminMessageBroadcast() {
   const [adminToken, setAdminToken] = useState(localStorage.getItem('adminToken'));
   const [toggled, setToggle] = useState(true);
   const [addMessageCon, setAddMessageCon] = useState(true);
-  const [messages, setMessages] = useState([]); // initialize an empty array to store messages
+  const [messages, setMessages] = useState([]); // Initialize an empty array to store messages
   const [notification, setNotification] = useState(null);
+  
+  const messageEndRef = useRef(null); // Create a ref for the end of the message container
 
   useEffect(() => {
     if (adminToken) {
@@ -43,14 +45,14 @@ function AdminMessageBroadcast() {
       console.log("Received message:", msg);
 
       // Add the new message to the existing list
-      setMessages(prevMessages => [msg, ...prevMessages]);
+      setMessages(prevMessages => [...prevMessages, msg]);
     });
 
     // Clean up Socket.io event listeners on component unmount
     return () => {
       socket.off('messageNotification');
     };
-  }, [socket]);
+  }, []);
 
   useEffect(() => {
     // Set up Socket.io event listener for notifications
@@ -62,7 +64,14 @@ function AdminMessageBroadcast() {
     return () => {
       socket.off('eventNotification');
     };
-  }, [socket]);
+  }, []);
+
+  useEffect(() => {
+    // Scroll to the bottom of the message list when messages are updated
+    if (messageEndRef.current) {
+      messageEndRef.current.scrollIntoView({ behavior: 'auto' });
+    }
+  }, [messages]);
 
   // Handle toggle of sidebar
   const pushCon = () => {
@@ -84,7 +93,7 @@ function AdminMessageBroadcast() {
           <UserHeader />
         </div>
 
-        <div className='w-[50%] flex flex-col justify-start items-center mt-[6rem] relative'>
+        <div className='w-[50%] flex flex-col justify-start items-center mt-[6rem] relative mb-60'>
           <h1 className='mb-4 text-2xl font-bold'>COMMUNITY CHAT</h1>
           {notification && <NotificationCard content={notification} show={true} />}
           {addMessageCon && <NewMessageCon close={handleAddEvent} />}
@@ -100,6 +109,7 @@ function AdminMessageBroadcast() {
               accessing={"user"} 
             />
           ))}
+          <div ref={messageEndRef} /> {/* Add a div element with the ref */}
         </div>
       </div>
     </div>

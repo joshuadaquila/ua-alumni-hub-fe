@@ -28,9 +28,16 @@ const columnHeaders = {
 const keyMapping = {
     yearGrad: 'Year Graduated',
     degree: 'Degree',
-    college: 'College', duration: 'Duration', institution: 'Institution',
-    honor: 'Honor', title: 'Title', name: 'Name', date: 'Date', rating: 'Rating',
-    parentInfluence: 'Parent Influence', passionProfession: 'Passion for the Profession'
+    college: 'College', duration: 'Duration', institution: 'Institution', immediateEmployment: 'Immediate Employment',
+    honor: 'Honor', title: 'Title', name: 'Name', date: 'Date', rating: 'Rating', highGrades: 'High Grades in the Course', goodGradesHS: 'Good Grades in High School',
+    peerInfluence: 'Peer Inluence', roleModel: 'Inspired by a Role Model', parentInfluence: 'Parent Influence', passionProfession: 'Passion for the Profession',
+    statusPrestige: 'Status or Prestige of the Profession',
+    courseAvailability: 'Availability of Course Offering',
+    careerAdvancement: 'Career Advancement',
+    affordableFamily: 'Affordable for the family',
+    attractiveCompensation: 'Attractive Compensation',
+    employmentAbroad: 'Employment Abroad',
+    noParticularChoice: 'No Particular Choice'
     // Add more key mappings here
 };
 
