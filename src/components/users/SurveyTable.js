@@ -12,13 +12,18 @@ import api from '../../pages/api';
 
 // Custom header names configuration
 const columnHeaders = {
-    alumniid: 'Alumni ID',
-    name: 'Name',
+    alumniid: 'Alumni ID', presentlyemployed: 'Presently Employed?', reasonnotemployed: 'Reason/s Not Employed', presentemploystatus: 'Present Employment Status', 
+    skillsaquiredincollege: 'Skills Acquired in College', presentoccupation: 'Present Occupation', lineofbusiness: 'Major Line of Business of the Company', 
+    placeofwork: 'Place of Work', firstjob: 'First Job After College?', reasonstayingonjob: 'Reason/s for Staying on the Job', firstjobrelatedtocourse: 'First Job Related to the Course?', 
+    reasonacceptingthejob: 'Reason/s for Accepting the Job', reasonchangingjob: 'Reason/s for Changing Job', firstjobduration: 'Firt Job Staying Duration', howfoundfirstjob: 'How Found First Job', 
+    howlongfoundfirstjob: 'Duration to Find First Job', joblvlposfirstjob: 'First Job Level Position',
+    joblvlposcurrentjob: 'Current Job Level Position', firstjobearning: 'First Job Earning', curriculumrelevance: 'Was the Curriculum You Had Relevant to Your First Job?',
+    name: 'Name', awardname: 'Award Name', awardbody: 'Awarding Body',
     telnumber: 'Telephone Number',
     mobilenum: 'Mobile Number',
     civilstatus: 'Civil Status',
     educattain: 'Educational Attainment',
-    exampassed: 'Exam Passed',
+    exampassed: 'Exam Passed', 
     reasonundergrad: 'Reason/s for Pursuing Undergraduate Course/s',
     reasongrad: 'Reason/s for Pursuing Graduate Course/s', trainingtitle: 'Training Title',
     // Add more column field to header name mappings here
@@ -31,13 +36,16 @@ const keyMapping = {
     college: 'College', duration: 'Duration', institution: 'Institution', immediateEmployment: 'Immediate Employment',
     honor: 'Honor', title: 'Title', name: 'Name', date: 'Date', rating: 'Rating', highGrades: 'High Grades in the Course', goodGradesHS: 'Good Grades in High School',
     peerInfluence: 'Peer Inluence', roleModel: 'Inspired by a Role Model', parentInfluence: 'Parent Influence', passionProfession: 'Passion for the Profession',
-    statusPrestige: 'Status or Prestige of the Profession',
-    courseAvailability: 'Availability of Course Offering',
-    careerAdvancement: 'Career Advancement',
-    affordableFamily: 'Affordable for the family',
-    attractiveCompensation: 'Attractive Compensation',
-    employmentAbroad: 'Employment Abroad',
-    noParticularChoice: 'No Particular Choice'
+    statusPrestige: 'Status or Prestige of the Profession', advanceStudy: 'Advance or Further Study', familyConcern: 'Family Concern', health: 'Health-Related Reason/s',
+    lackWorkExp: 'Lack of Work Experience', noJobOp: 'No Job Opportunity',
+    notLookJob: 'Did Not Look for a Job', courseAvailability: 'Availability of Course Offering',
+    careerAdvancement: 'Career Advancement', affordableFamily: 'Affordable for the family', attractiveCompensation: 'Attractive Compensation',
+    employmentAbroad: 'Employment Abroad', noParticularChoice: 'No Particular Choice',
+    salaries: 'Salaries and Benefits', careerChallenge: 'Career Challenge', specialSkill: 'Related to Special Skill', relatedToCourse: 'Related to Course', proximityToResidence: 'Proximity to Residence',
+    familyInfluence: 'Family Influence', schoolplacement: 'Arranged by School\'s Job Placement Officer', walkin: 'As Walk-in Applicant', familybusiness: 'Family Business',
+    reco: 'Recommended by Someone', jobfair: 'Job Fair or PESO', advertisement: 'Response to an Advertisement', communication: 'Communication Skills', humanrelation: 'Human Relations Skills',
+    entrepreneurial: 'Entrepreneurial Skills', informationtech: 'Information Technology Skills', problemsolving: 'Problem Solving Skills', criticalthinking: 'Critical Thinking Skills'
+    
     // Add more key mappings here
 };
 
