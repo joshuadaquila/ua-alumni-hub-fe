@@ -9,6 +9,7 @@ import { Dialog } from 'primereact/dialog';
 import { Button } from 'primereact/button';
 import { ProgressSpinner } from 'primereact/progressspinner';
 import api from '../../pages/api';
+import { useNavigate } from 'react-router-dom';
 
 // Custom header names configuration
 const columnHeaders = {
@@ -60,6 +61,7 @@ export default function SurveyTable({ surveyData }) {
     });
     const [globalFilterValue, setGlobalFilterValue] = useState('');
     const printRef = useRef();
+    const navigate = useNavigate();
 
     const fetchResponses = async (userId) => {
         try {
@@ -208,8 +210,13 @@ export default function SurveyTable({ surveyData }) {
         printWindow.close();
     };
 
+    const viewSummary = () => {
+        navigate('/admin/viewSummary', {replace: true });
+    }
+
     return (
         <div className="card">
+            <button onClick={viewSummary}>View All</button>
             <DataTable
                 value={surveyData}
                 paginator

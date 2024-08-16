@@ -17,6 +17,7 @@ export default function AlumniTable({ alumniData }) {
         name: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
         address: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
         birthday: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
+        program: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
         graduationyear: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
         email: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
     });
@@ -73,7 +74,7 @@ export default function AlumniTable({ alumniData }) {
                 showGridlines 
                 filters={filters} 
                 filterDisplay="menu"
-                globalFilterFields={['alumniid', 'name', 'address', 'birthday', 'graduationyear', 'email']} 
+                globalFilterFields={['alumniid', 'name', 'address', 'birthday', 'graduationyear', 'program', 'email']} 
                 header={header}
             >
                 <Column field="alumniid" header="Alumni ID" filter filterPlaceholder="Search by ID" style={{ width: '10%' }}></Column>
@@ -81,6 +82,7 @@ export default function AlumniTable({ alumniData }) {
                 <Column field="address" header="Address" filter filterPlaceholder="Search by Address" style={{ width: '20%' }}></Column>
                 <Column field="birthday" header="Birthday" body={formatBirthday} filter filterPlaceholder="Search by Birthday" style={{ width: '15%' }}></Column>
                 <Column field="graduationyear" header="Graduation Year" filter filterPlaceholder="Search by Graduation Year" style={{ width: '15%' }}></Column>
+                <Column field="program" header="Program" filter filterPlaceholder="Search by Program" style={{ width: '15%' }}></Column>
                 <Column field="email" header="Email" filter filterPlaceholder="Search by Email" style={{ width: '20%' }}></Column>
                 {/* <Column header="Action" body={actionTemplate}></Column> */}
             </DataTable>
