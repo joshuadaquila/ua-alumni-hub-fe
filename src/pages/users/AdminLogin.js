@@ -37,11 +37,11 @@ const AdminLogin = ({ handleAdminLogin }) => {
   };
 
   return (
-    <div className="flex flex-col justify-center items-center w-full min-h-screen bg-red-950">
+    <div className="flex flex-col justify-center items-center w-full min-h-screen text-black bg-white">
       <div className="flex flex-col justify-center items-center mt-4">
-        <h1 className="text-5xl font-bold text-white">ALUMNI HUB</h1>
-        <h1 className="text-5xl font-bold text-white">(Alumni Tracer and Engagement Hub)</h1>
-        <h3 className="text-white text-2xl">Administrator Control</h3>
+        <h1 className="text-5xl font-bold ">ALUMNI HUB</h1>
+        <h1 className="text-5xl font-bold ">(Alumni Tracer and Engagement Hub)</h1>
+        <h3 className=" text-2xl">Administrator Control</h3>
         <img src={ualogo} alt="UA Logo" className="mt-4 rounded-full" width={250} />
 
         <form onSubmit={handleSubmit} className="bg-white rounded-md m-2 shadow-md">
@@ -81,7 +81,7 @@ const AdminLogin = ({ handleAdminLogin }) => {
           <div className="p-4 flex flex-col items-center">
             <button
               type="submit"
-              className={`font-bold rounded-lg text-lg w-48 h-16 bg-[#374151] text-[#ffffff] justify-center ${
+              className={`font-bold rounded-lg text-lg w-48 h-16 bg-red-900 text-[#ffffff] justify-center ${
                 isLoading ? "" : "btn"
               }`}
               disabled={isLoading}

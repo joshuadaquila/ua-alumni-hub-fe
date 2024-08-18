@@ -20,7 +20,7 @@ const Sidebar = ({ handleClick }) => {
           <FontAwesomeIcon icon={faBars} className=" text-2xl " onClick={handleTrigger} />
         </Link>
         
-        <nav className={`absolute top-0 left-0 h-screen w-64 bg-red-950
+        <nav className={`absolute top-0 left-0 h-screen w-64 bg-red-900
          text-white transition opacity duration-300 ease-in-out shadow-md ${sidebar ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-full"}`}>
           <div className="flex flex-col justify-center items-center ">
             <img src={ualogo} className="rounded-full p-12 "/>
