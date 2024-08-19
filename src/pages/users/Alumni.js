@@ -130,7 +130,7 @@ export default function Alumni() {
 
           <PrintReport title={"Alumni Table"}>
             {/* Advanced Search Toggle Button */}
-            <button onClick={toggleFilters} className='mb-4 mt-4 p-2 bg-red-950 text-white rounded-md w-52'>
+            <button onClick={toggleFilters} className='mb-4 mt-4 p-2 bg-red-900 text-white rounded-md w-52'>
               <FontAwesomeIcon icon={faMagnifyingGlass} className='mr-2'/>
               {filtersVisible ? 'Hide Advanced Search' : 'Advance Search'}
             </button>
