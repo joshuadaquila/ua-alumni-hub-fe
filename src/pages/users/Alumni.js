@@ -72,6 +72,18 @@ export default function Alumni() {
     );
   });
 
+  // Function to count the number of rows by program
+  const countByProgram = (data) => {
+    return data.reduce((acc, alumnus) => {
+      const program = alumnus.program || 'Unknown';
+      acc[program] = (acc[program] || 0) + 1;
+      return acc;
+    }, {});
+  };
+
+  // Calculate counts after filtering
+  const programCounts = countByProgram(filteredAlumni);
+
   return (
     <div className='minbackground flex w-screen min-h-screen'>
       <div className={`${toggled ? "w-64" : ""}`}>
@@ -84,7 +96,7 @@ export default function Alumni() {
 
         <div className='mt-[6rem] shadow-md text-black'>
           <p className='text-2xl font-bold mb-12'>List of Alumni</p>
-          
+
           
 
           {/* Search Filters */}
@@ -134,10 +146,24 @@ export default function Alumni() {
               <FontAwesomeIcon icon={faMagnifyingGlass} className='mr-2'/>
               {filtersVisible ? 'Hide Advanced Search' : 'Advance Search'}
             </button>
-            
+
+            {/* Display program counts */}
+            <div className='mb-4 text-right mr-4'>
+              <h3 className='text-xl font-semibold mb-2'>Program Counts:</h3>
+              <div className='max-h-60 overflow-y-auto p-2'>
+                <ul>
+                  {Object.entries(programCounts).map(([program, count]) => (
+                    <li key={program} className='mb-1'>
+                      {program}: {count}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+
+
             <AlumniTable alumniData={filteredAlumni} />
           </PrintReport>
-          
         </div>
       </div>
     </div>

@@ -127,6 +127,7 @@ function Events({ logout }) {
         location={event.location}
         capacity={event.capacity}
         registrationdeadline={event.registrationdeadline}
+        attendees={event.totalattendees}
         accessing={"user"}
         onDelete={handleDeleteEvent}
         onUpdate={handleUpdate}

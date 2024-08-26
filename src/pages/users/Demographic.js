@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPerson, faRing, faUser, faMapMarked, faMap, faHouse, faPrint, faX, faClose, faFile } from '@fortawesome/free-solid-svg-icons';
+import { faPerson, faRing, faUser, faClose, faFile, faPrint } from '@fortawesome/free-solid-svg-icons';
 import { PieChart, pieArcLabelClasses } from '@mui/x-charts/PieChart';
 import Sidebar from '../../components/users/Sidebar';
 import UserHeader from '../../components/users/UserHeader';
@@ -11,6 +11,7 @@ function Demographic() {
   const [toggled, setToggle] = useState(true);
   const [modeMetrics, setModeMetrics] = useState({});
   const [categoryCounts, setCategoryCounts] = useState({});
+  const [educAttainmentCounts, setEducAttainmentData] = useState([]);
   const [showReport, setShowReport] = useState(false);
   const componentRef = useRef();
 
@@ -20,7 +21,7 @@ function Demographic() {
 
   useEffect(() => {
     // Fetch mode metrics
-    api.get(`/getMode`)
+    api.get('/getMode')
       .then(response => {
         const metrics = response.data.reduce((acc, item) => {
           acc[item.metric] = item.value;
@@ -29,11 +30,25 @@ function Demographic() {
         setModeMetrics(metrics);
       })
       .catch(error => {
-        console.error(error);
+        console.error('Error fetching mode metrics:', error);
+      });
+
+    // Fetch education attainment data
+    api.get('/getEducAttainment')
+      .then(response => {
+        const data = response.data;
+        const attainmentData = [
+          { label: 'Graduate', value: data.gradCount },
+          { label: 'Undergraduate', value: data.undergradCount },
+        ];
+        setEducAttainmentData(attainmentData);
+      })
+      .catch(error => {
+        console.error('Error fetching education attainment:', error);
       });
 
     // Fetch category counts
-    api.get(`/getCounts`)
+    api.get('/getCounts')
       .then(response => {
         const counts = response.data.reduce((acc, item) => {
           if (!acc[item.category]) {
@@ -45,7 +60,7 @@ function Demographic() {
         setCategoryCounts(counts);
       })
       .catch(error => {
-        console.error(error);
+        console.error('Error fetching category counts:', error);
       });
   }, []);
 
@@ -80,10 +95,10 @@ function Demographic() {
   };
 
   const PrintableReport = React.forwardRef((props, ref) => {
-    const { modeMetrics, categoryCounts } = props;
+    const { modeMetrics, categoryCounts, educAttainmentCounts } = props;
 
     return (
-      <div ref={ref} className="p-4 print:p-0 bg-white shadow-lg border rounded-lg max-h-full overflow-auto">
+      <div ref={ref} className="p-4 print:p-0 bg-white rounded-lg max-h-full overflow-auto">
         <h2 className="text-2xl font-bold mb-4">Demographic Insights</h2>
         <div className="mb-6">
           <h3 className="text-xl font-semibold">Mode Metrics:</h3>
@@ -109,6 +124,10 @@ function Demographic() {
               </ul>
             </div>
           ))}
+        </div>
+        <div>
+          <h3 className="text-xl font-semibold">Educational Attainment:</h3>
+          {educAttainmentCounts.length > 0 && renderPieChart(educAttainmentCounts)}
         </div>
       </div>
     );
@@ -136,6 +155,7 @@ function Demographic() {
                   ref={componentRef}
                   modeMetrics={modeMetrics}
                   categoryCounts={categoryCounts}
+                  educAttainmentCounts={educAttainmentCounts}
                 />
                 <button
                   className="absolute top-2 right-2 p-2 bg-red-500 text-white rounded"
@@ -159,9 +179,11 @@ function Demographic() {
             <UserHeader />
             <div className='mt-[6rem] w-full'>
               <div className='flex items-center mb-6'>
-                <p className='text-2xl font-bold'>Demographic Insights</p>
+                <p className='text-2xl font-bold'>Demographic Profiling</p>
               </div>
               <div className='grid grid-cols-1 md:grid-cols-2 gap-4 p-10 w-full'>
+                
+                {/* Sex Pie Chart */}
                 <div>
                   <div className='flex items-end mb-4'>
                     <div className='flex items-center'>
@@ -170,7 +192,10 @@ function Demographic() {
                     </div>
                   </div>
                   {categoryCounts['Sex'] && renderPieChart(categoryCounts['Sex'])}
-
+                </div>
+                
+                {/* Civil Status Pie Chart */}
+                <div>
                   <div className='flex items-end mb-4'>
                     <div className='flex items-center'>
                       <FontAwesomeIcon icon={faRing} />
@@ -178,7 +203,10 @@ function Demographic() {
                     </div>
                   </div>
                   {categoryCounts['Civil Status'] && renderPieChart(categoryCounts['Civil Status'])}
-
+                </div>
+                
+                {/* Age Range Pie Chart */}
+                <div>
                   <div className='flex items-end mb-4'>
                     <div className='flex items-center'>
                       <FontAwesomeIcon icon={faUser} />
@@ -188,40 +216,17 @@ function Demographic() {
                   {categoryCounts['Age Range'] && renderPieChart(categoryCounts['Age Range'])}
                 </div>
 
+                {/* Educational Attainment Pie Chart */}
                 <div>
                   <div className='flex items-end mb-4'>
                     <div className='flex items-center'>
-                      <FontAwesomeIcon icon={faMapMarked} />
-                      <p className='text-lg ml-2 mr-2'>Mode Region: {modeMetrics['Mode Region']}</p>
+                      <FontAwesomeIcon icon={faFile} />
+                      <p className='text-lg ml-2 mr-2'>Educational Attainment</p>
                     </div>
                   </div>
-                  {categoryCounts['Region'] && renderPieChart(categoryCounts['Region'])}
-
-                  <div className='flex items-end mb-4'>
-                    <div className='flex items-center'>
-                      <FontAwesomeIcon icon={faMap} />
-                      <p className='text-lg ml-2 mr-2'>Mode Province: {modeMetrics['Mode Province']}</p>
-                    </div>
-                  </div>
-                  {categoryCounts['Province'] && renderPieChart(categoryCounts['Province'])}
-
-                  <div className='flex items-end mb-4'>
-                    <div className='flex items-center'>
-                      <FontAwesomeIcon icon={faHouse} />
-                      <p className='text-lg ml-2 mr-2'>Mode Residence: {modeMetrics['Mode Residence']}</p>
-                    </div>
-                  </div>
-                  {categoryCounts['Residence'] && renderPieChart(categoryCounts['Residence'])}
-
-                  <div className='flex items-end mb-4'>
-                    <div className='flex items-center'>
-                      <FontAwesomeIcon icon={faHouse} />
-                      <p className='text-lg ml-2 mr-2'>Mode Graduation Year: {modeMetrics['Mode Graduation Year']}</p>
-                    </div>
-                  </div>
-                  {console.log(categoryCounts)}
-                  {categoryCounts['Graduation Year'] && renderPieChart(categoryCounts['Graduation Year'])}
+                  {educAttainmentCounts.length > 0 && renderPieChart(educAttainmentCounts)}
                 </div>
+                
               </div>
             </div>
           </div>

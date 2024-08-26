@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { faBarChart, faBars, faBroadcastTower, faCalendarAlt, faChartBar, faChartLine, faDashboard, faGraduationCap, faHandPaper, faMessage, faPaperclip, faTimes, faUser } from "@fortawesome/free-solid-svg-icons";
+import { faBarChart, faBars, faBroadcastTower, faCalendarAlt, faChartBar, faChartColumn, faChartLine, faDashboard, faGraduationCap, faHandPaper, faMessage, faPaperclip, faTimes, faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import ualogo from "../../resources/ualogo.jpg";
 
@@ -66,13 +66,20 @@ const Sidebar = ({ handleClick }) => {
             <li className="nav-item m-2 hover:bg-white hover:text-black">
               <Link to="/admin/demographic" className="font-bold flex items-center">
                 <FontAwesomeIcon icon={faBarChart} className="mr-2" />
-                Demographic Report
+                Demographic Profiling
               </Link>
             </li>
             <li className="nav-item m-2 hover:bg-white hover:text-black">
               <Link to="/admin/employment" className="font-bold flex items-center">
                 <FontAwesomeIcon icon={faChartLine} className="mr-2" />
-                Employment Report
+                Employment Profiling
+              </Link>
+            </li>
+
+            <li className="nav-item m-2 hover:bg-white hover:text-black">
+              <Link to="/admin/contribution" className="font-bold flex items-center">
+                <FontAwesomeIcon icon={faChartColumn} className="mr-2" />
+                Contribution Profiling
               </Link>
             </li>
           </ul>

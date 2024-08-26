@@ -27,6 +27,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faWarning } from '@fortawesome/free-solid-svg-icons';
 import Employment from './pages/users/Employment';
 import SurveySummary from './pages/users/SurveySummary';
+import Contribution from './pages/users/Contribution';
 // import 'primeflex/primeflex.css'; // Optional, for additional utilities
 
 function App() {
@@ -113,8 +114,8 @@ function App() {
           <Route path="/admin/messagebroadcast" element={
             adminToken ? <AdminMessageBroadcast /> : <Navigate to="/" />
           } />
-          <Route path="/admin/viewSummary" element={
-            adminToken ? <SurveySummary /> : <Navigate to="/" />
+          <Route path="/admin/contribution" element={
+            adminToken ? <Contribution /> : <Navigate to="/" />
           } />
         </Routes>
       </Router>

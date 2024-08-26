@@ -5,7 +5,13 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGraduationCap } from '@fortawesome/free-solid-svg-icons';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
+import { Bar } from 'react-chartjs-2';
+import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
+import ChartDataLabels from 'chartjs-plugin-datalabels';
 import api from '../api';
+
+// Register Chart.js components
+ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, ChartDataLabels);
 
 function Dashboard({ logout }) {
   const [adminUName, setAdminUName] = useState(localStorage.getItem('adminUName'));
@@ -16,6 +22,11 @@ function Dashboard({ logout }) {
   const [futureEvents, setFutureEvents] = useState([]);
   const [pastEvents, setPastEvents] = useState([]);
   const [toggled, setToggle] = useState(true);
+  const [attendees, setAttendees] = useState({});
+  const [selectedEventId, setSelectedEventId] = useState(null);
+  const [isModalVisible, setModalVisible] = useState(false);
+  const [newAttendeeCount, setNewAttendeeCount] = useState(0);
+  const [graduationYearData, setGraduationYearData] = useState({});
 
   const pushCon = () => {
     setToggle(!toggled);
@@ -26,7 +37,28 @@ function Dashboard({ logout }) {
     api.get(`/getDashboardStats`)
       .then(response => {
         setAlumniData(response.data);
-        setTotalAlumni(response.data[0].totalAlumni)
+        setTotalAlumni(response.data[0].totalAlumni);
+      })
+      .catch(error => {
+        console.error(error);
+        if (error.response.status === 401) {
+          logout();
+        }
+      });
+
+    // Fetch graduation year and program data for chart
+    api.get(`/getYearProgram`)
+      .then(response => {
+        const data = response.data;
+        const formattedData = data.reduce((acc, item) => {
+          if (!acc[item.graduationyear]) {
+            acc[item.graduationyear] = {};
+          }
+          acc[item.graduationyear][item.program] = item.count;
+          return acc;
+        }, {});
+
+        setGraduationYearData(formattedData);
       })
       .catch(error => {
         console.error(error);
@@ -47,13 +79,139 @@ function Dashboard({ logout }) {
     // Fetch past events from the server
     api.get(`/getPastEvents`)
       .then(response => {
-        setPastEvents(response.data);
+        const events = response.data;
+        setPastEvents(events);
+
+        // Initialize attendees state with current data from past events
+        const initialAttendees = events.reduce((acc, event) => {
+          acc[event.eventid] = event.totalattendees || 0; // Initialize with existing data or zero
+          return acc;
+        }, {});
+        setAttendees(initialAttendees);
       })
       .catch(error => {
         console.error(error);
       });
-
   }, []);
+
+  const updateAttendeesOnServer = (eventId, attendeeCount) => {
+    api.post(`/setTotalAttended`, {
+      eventId,
+      attendeeCount
+    })
+    .then(response => {})
+    .catch(error => {
+      console.error(`Failed to update attendees for event ${eventId}:`, error);
+    });
+  };
+
+  const handleSetAttendance = (eventId) => {
+    setSelectedEventId(eventId);
+    setNewAttendeeCount(attendees[eventId] || 0);
+    setModalVisible(true);
+  };
+
+  const handleConfirm = () => {
+    // Update local state
+    setAttendees(prevAttendees => ({
+      ...prevAttendees,
+      [selectedEventId]: newAttendeeCount,
+    }));
+
+    // Send the updated number of attendees to the server
+    updateAttendeesOnServer(selectedEventId, newAttendeeCount);
+
+    // Update past events to reflect the change
+    setPastEvents(prevEvents =>
+      prevEvents.map(event =>
+        event.eventid === selectedEventId
+          ? { ...event, totalattendees: newAttendeeCount }
+          : event
+      )
+    );
+
+    setModalVisible(false);
+    setSelectedEventId(null);
+  };
+
+  const handleModalClose = () => {
+    setModalVisible(false);
+    setSelectedEventId(null);
+  };
+
+  const percentageFormatter = (rowData) => {
+    const registered = rowData.totalRegistration || 1; // Avoid division by zero
+    const attendeeCount = attendees[rowData.eventid] || rowData.totalattendees; // Use updated attendees count
+    const percentage = ((attendeeCount / registered) * 100).toFixed(2);
+    return `${percentage}%`;
+  };
+
+  // Prepare data for the bar chart
+  const allCourses = new Set();
+  Object.values(graduationYearData).forEach(yearData => {
+    Object.keys(yearData).forEach(course => allCourses.add(course));
+  });
+
+  const labels = Object.keys(graduationYearData);
+  const datasets = Array.from(allCourses).map((course, index) => {
+    return {
+      label: course,
+      backgroundColor: `rgba(${index * 100}, ${index * 50 + 100}, ${index * 100 + 150}, 1)`,
+      borderColor: `rgba(${index * 50}, ${index * 50 + 100}, ${index * 50 + 150}, 1)`,
+      data: labels.map(year => graduationYearData[year][course] || 0),
+    };
+  });
+
+  const barChartData = {
+    labels: labels,
+    datasets: datasets
+  };
+
+  const barChartOptions = {
+    responsive: true,
+    plugins: {
+      datalabels: {
+        color: '#000',
+        anchor: 'end',
+        align: 'top',
+        formatter: (value) => value,
+        font: {
+          weight: 'bold'
+        }
+      },
+      legend: {
+        position: 'top'
+      },
+      tooltip: {
+        callbacks: {
+          label: function(tooltipItem) {
+            return `Count: ${tooltipItem.raw}`;
+          }
+        }
+      }
+    },
+    scales: {
+      x: {
+        stacked: false,
+        title: {
+          display: true,
+          text: 'Years'
+        },
+        ticks: {
+          autoSkip: true,
+          maxTicksLimit: 20
+        }
+      },
+      y: {
+        stacked: false,
+        beginAtZero: true,
+        title: {
+          display: true,
+          text: 'Count'
+        }
+      }
+    }
+  };
 
   return (
     <div className='minbackground flex w-screen min-h-screen'>
@@ -76,8 +234,8 @@ function Dashboard({ logout }) {
           </div>
 
           <div className='grid grid-cols-1 p-10 place-content-center w-full gap-4'>
-            {/* First row */}
-            <div className='bg-white p-4 rounded-md shadow-md '>
+            {/* Total Alumni */}
+            <div className='bg-white p-4 rounded-md shadow-md'>
               <div className='flex flex-col items-center justify-center'>
                 <div className='flex items-center'>
                   <FontAwesomeIcon icon={faGraduationCap} />
@@ -86,9 +244,19 @@ function Dashboard({ logout }) {
               </div>
             </div>
 
-            {/* Second row */}
+            {/* Bar Chart */}
+<div className='bg-white p-4 rounded-md shadow-md flex justify-center'>
+  <div className='flex flex-col items-center' style={{ width: '100%', maxWidth: '800px' }}>
+    <h2 className='text-lg font-bold mb-4 text-center'>Graduation Year and Program Distribution</h2>
+    <div style={{ width: '100%', height: '400px' }}>
+      <Bar data={barChartData} options={barChartOptions} />
+    </div>
+  </div>
+</div>
+
+
+            {/* Incoming Events */}
             <div className='bg-white p-4 rounded-md shadow-md'>
-              {/* Render DataTable for Future Events */}
               <h2 className='text-lg font-bold mb-4'>Incoming Events</h2>
               <DataTable value={futureEvents} responsiveLayout="scroll">
                 <Column field="title" header="Event Title"></Column>
@@ -99,15 +267,13 @@ function Dashboard({ logout }) {
                 <Column field="location" header="Location"></Column>
                 <Column field="capacity" header="Capacity"></Column>
                 <Column field="totalRegistration" header="Total Registration"></Column>
-                {/* Add more columns as necessary */}
               </DataTable>
             </div>
 
+            {/* Past Events */}
             <div className='bg-white p-4 rounded-md shadow-md'>
-              {/* Render DataTable for Past Events */}
               <h2 className='text-lg font-bold mt-6 mb-4'>Past Events</h2>
               <DataTable value={pastEvents} responsiveLayout="scroll">
-                <Column field="title" header="Event Title"></Column>
                 <Column field="title" header="Event Title"></Column>
                 <Column field="description" header="Description"></Column>
                 <Column field="date" header="Date" body={(rowData) => rowData.date.split('T')[0]}></Column>
@@ -115,12 +281,54 @@ function Dashboard({ logout }) {
                 <Column field="endtime" header="End Time"></Column>
                 <Column field="location" header="Location"></Column>
                 <Column field="capacity" header="Capacity"></Column>
-                {/* Add more columns as necessary */}
+                <Column field="totalRegistration" header="Total Registration"></Column>
+                <Column field="totalattendees" header="Total Attendees"></Column>
+                <Column header="Percentage" body={percentageFormatter}></Column>
+                <Column
+                  header="Action"
+                  body={(rowData) => (
+                    <button
+                      onClick={() => handleSetAttendance(rowData.eventid)}
+                      className="bg-blue-500 text-white px-4 py-2 rounded"
+                    >
+                      Set Attendance
+                    </button>
+                  )}
+                ></Column>
               </DataTable>
             </div>
           </div>
         </div>
       </div>
+
+      {/* Inline Modal Component */}
+      {isModalVisible && (
+        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center">
+          <div className="bg-white p-4 rounded shadow-lg w-80">
+            <h2 className="text-lg font-bold mb-4">Set Number of Attendees</h2>
+            <input
+              type="number"
+              value={newAttendeeCount}
+              onChange={(e) => setNewAttendeeCount(parseInt(e.target.value, 10) || 0)}
+              className="w-full p-2 border border-gray-300 rounded mb-4"
+            />
+            <div className="flex justify-end space-x-2">
+              <button
+                onClick={handleModalClose}
+                className="bg-gray-500 text-white px-4 py-2 rounded"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleConfirm}
+                className="bg-blue-500 text-white px-4 py-2 rounded"
+              >
+                OK
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

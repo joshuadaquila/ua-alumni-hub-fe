@@ -216,7 +216,6 @@ export default function SurveyTable({ surveyData }) {
 
     return (
         <div className="card">
-            <button onClick={viewSummary}>View All</button>
             <DataTable
                 value={surveyData}
                 paginator

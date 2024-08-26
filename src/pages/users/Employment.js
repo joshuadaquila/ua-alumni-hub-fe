@@ -84,15 +84,15 @@ function Employment() {
     const { modeMetrics, categoryCounts } = props;
 
     return (
-      <div ref={ref} className="p-4 print:p-0 bg-white shadow-lg border rounded-lg max-h-full overflow-auto">
-        <h2 className="text-2xl font-bold mb-4">Employment Insights</h2>
+      <div ref={ref} className="p-4 print:p-0 bg-white  rounded-lg max-h-full overflow-auto">
+        <h2 className="text-2xl font-bold mb-4">Employment Profiling</h2>
         <div className="mb-6">
           <h3 className="text-xl font-semibold">Mode Employment Metrics:</h3>
           <ul className="list-disc pl-5">
             {Object.entries(modeMetrics).map(([metric, value]) => (
-              <li key={metric} className="mb-2">
+              <ul key={metric} className="mb-2">
                 <strong>{metric}:</strong> {value}
-              </li>
+              </ul>
             ))}
           </ul>
         </div>
@@ -103,9 +103,9 @@ function Employment() {
               <h4 className="text-lg font-semibold">{category}</h4>
               <ul className="list-disc pl-5">
                 {categoryCounts[category].map((item, index) => (
-                  <li key={index} className="mb-1">
+                  <ul key={index} className="mb-1">
                     <strong>{item.label}:</strong> {item.value}
-                  </li>
+                  </ul>
                 ))}
               </ul>
             </div>
@@ -160,14 +160,14 @@ function Employment() {
             <UserHeader />
             <div className='mt-[6rem] w-full'>
               <div className='flex items-center mb-6'>
-                <p className='text-2xl font-bold'>Employment Insights</p>
+                <p className='text-2xl font-bold'>Employment Profiling</p>
               </div>
               <div className='grid grid-cols-1 md:grid-cols-2 gap-4 p-10 w-full'>
                 <div>
                   <div className='flex items-end mb-4'>
                     <div className='flex items-center'>
                       <FontAwesomeIcon icon={faBriefcase} />
-                      <p className='text-lg ml-2 mr-2'>Present Employment: {modeEmploymentMetrics['Presently Employed']}</p>
+                      <p className='text-lg ml-2 mr-2'>Nature of Employment: {modeEmploymentMetrics['Presently Employed']}</p>
                     </div>
                   </div>
                   {employmentCategoryCounts['Presently Employed'] && renderPieChart(employmentCategoryCounts['Presently Employed'])}
@@ -179,14 +179,6 @@ function Employment() {
                     </div>
                   </div>
                   {employmentCategoryCounts['Employment Status'] && renderPieChart(employmentCategoryCounts['Employment Status'])}
-
-                  <div className='flex items-end mb-4'>
-                    <div className='flex items-center'>
-                      <FontAwesomeIcon icon={faCity} />
-                      <p className='text-lg ml-2 mr-2'>Line of Business: {modeEmploymentMetrics['Line of Business']}</p>
-                    </div>
-                  </div>
-                  {employmentCategoryCounts['Line of Business'] && renderPieChart(employmentCategoryCounts['Line of Business'])}
                 </div>
 
                 <div>
@@ -200,12 +192,20 @@ function Employment() {
 
                   <div className='flex items-end mb-4'>
                     <div className='flex items-center'>
-                      <FontAwesomeIcon icon={faMap} />
-                      <p className='text-lg ml-2 mr-2'>Present Occupation: {modeEmploymentMetrics['Occupation']}</p>
+                      <FontAwesomeIcon icon={faMapMarked} />
+                      <p className='text-lg ml-2 mr-2'>Job Earning: {modeEmploymentMetrics['Job Earning']}</p>
                     </div>
                   </div>
-                  {console.log(modeEmploymentMetrics)}
-                  {employmentCategoryCounts['Occupation'] && renderPieChart(employmentCategoryCounts['Occupation'])}
+                  {employmentCategoryCounts['Job Earning'] && renderPieChart(employmentCategoryCounts['Job Earning'])}
+
+                  <div className='flex items-end mb-4'>
+                    <div className='flex items-center'>
+                      <FontAwesomeIcon icon={faMapMarked} />
+                      <p className='text-lg ml-2 mr-2'>First Job Level Position: {modeEmploymentMetrics['First Job Level Position']}</p>
+                    </div>
+                  </div>
+                  {employmentCategoryCounts['First Job Level Position'] && renderPieChart(employmentCategoryCounts['First Job Level Position'])}
+
 
                 </div>
               </div>

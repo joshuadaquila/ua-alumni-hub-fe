@@ -9,7 +9,7 @@ import EditEventForm from './EditEventForm';
 import ReactToPrint from 'react-to-print';
 
 function EventCardAdmin(props) {
-  const { id, title, description, date, time, endtime, location, capacity, registrationdeadline, accessing } = props;
+  const { id, title, description, date, time, endtime, location, capacity, registrationdeadline, registration, attendees, percentage, accessing } = props;
 
   const [isLoading, setLoading] = useState(false);
   const [errors, setErrors] = useState([]);
@@ -80,6 +80,7 @@ function EventCardAdmin(props) {
     props.onUpdate(); // Notify parent component to refresh events
   };
 
+  console.log("report data", reportData)
   const PrintableReport = React.forwardRef((props, ref) => (
     <div ref={ref} className='p-4 text-left'>
       <h3 className='text-lg font-bold mb-2'>Event Details</h3>
@@ -89,6 +90,10 @@ function EventCardAdmin(props) {
       <p><strong>Date:</strong> {formatDate(date)}</p>
       <p><strong>Start Time:</strong> {time}</p>
       <p><strong>End Time:</strong> {endtime}</p>
+      <p><strong>Total Registrations:</strong> {reportData.length}</p>
+      <p><strong>Total Attendees:</strong> {attendees}</p>
+      <p><strong>Percentage:</strong> {reportData.length > 0 ? ((attendees / reportData.length) * 100).toFixed(2) + '%' : 'N/A'}</p>
+
       <h3 className='text-lg font-bold mt-4'>Registrations</h3>
       {reportData ? (
         <table className='w-full border-collapse border border-gray-300'>
