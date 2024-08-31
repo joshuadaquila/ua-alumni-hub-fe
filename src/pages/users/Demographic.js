@@ -102,32 +102,65 @@ function Demographic() {
         <h2 className="text-2xl font-bold mb-4">Demographic Insights</h2>
         <div className="mb-6">
           <h3 className="text-xl font-semibold">Mode Metrics:</h3>
-          <ul className="list-disc pl-5">
-            {Object.entries(modeMetrics).map(([metric, value]) => (
-              <li key={metric} className="mb-2">
-                <strong>{metric}:</strong> {value}
-              </li>
-            ))}
-          </ul>
+          <table className="table-auto w-full mb-4">
+            <thead>
+              <tr>
+                <th className="px-4 py-2 text-left">Metric</th>
+                <th className="px-4 py-2 text-left">Value</th>
+              </tr>
+            </thead>
+            <tbody>
+              {Object.entries(modeMetrics).map(([metric, value]) => (
+                <tr key={metric}>
+                  <td className="border px-4 py-2">{metric}</td>
+                  <td className="border px-4 py-2">{value}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
         <div>
           <h3 className="text-xl font-semibold">Category Counts:</h3>
           {Object.keys(categoryCounts).map(category => (
             <div key={category} className="mb-4">
               <h4 className="text-lg font-semibold">{category}</h4>
-              <ul className="list-disc pl-5">
-                {categoryCounts[category].map((item, index) => (
-                  <li key={index} className="mb-1">
-                    <strong>{item.label}:</strong> {item.value}
-                  </li>
-                ))}
-              </ul>
+              <table className="table-auto w-full mb-4">
+                <thead>
+                  <tr>
+                    <th className="px-4 py-2 text-left">Label</th>
+                    <th className="px-4 py-2 text-left">Count</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {categoryCounts[category].map((item, index) => (
+                    <tr key={index}>
+                      <td className="border px-4 py-2">{item.label}</td>
+                      <td className="border px-4 py-2">{item.value}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
           ))}
         </div>
         <div>
           <h3 className="text-xl font-semibold">Educational Attainment:</h3>
-          {educAttainmentCounts.length > 0 && renderPieChart(educAttainmentCounts)}
+          <table className="table-auto w-full">
+            <thead>
+              <tr>
+                <th className="px-4 py-2 text-left">Level</th>
+                <th className="px-4 py-2 text-left">Count</th>
+              </tr>
+            </thead>
+            <tbody>
+              {educAttainmentCounts.map((item, index) => (
+                <tr key={index}>
+                  <td className="border px-4 py-2">{item.label}</td>
+                  <td className="border px-4 py-2">{item.value}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       </div>
     );
@@ -210,23 +243,22 @@ function Demographic() {
                   <div className='flex items-end mb-4'>
                     <div className='flex items-center'>
                       <FontAwesomeIcon icon={faUser} />
-                      <p className='text-lg ml-2 mr-2'>Mean Age: {modeMetrics['Mean Age']}</p>
+                      <p className='text-lg ml-2 mr-2'>Mode Age Range: {modeMetrics['Mode Age Range']}</p>
                     </div>
                   </div>
                   {categoryCounts['Age Range'] && renderPieChart(categoryCounts['Age Range'])}
                 </div>
-
+                
                 {/* Educational Attainment Pie Chart */}
                 <div>
                   <div className='flex items-end mb-4'>
                     <div className='flex items-center'>
-                      <FontAwesomeIcon icon={faFile} />
+                      <FontAwesomeIcon icon={faUser} />
                       <p className='text-lg ml-2 mr-2'>Educational Attainment</p>
                     </div>
                   </div>
-                  {educAttainmentCounts.length > 0 && renderPieChart(educAttainmentCounts)}
+                  {educAttainmentCounts && renderPieChart(educAttainmentCounts)}
                 </div>
-                
               </div>
             </div>
           </div>

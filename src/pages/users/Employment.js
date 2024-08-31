@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBriefcase, faBuilding, faCity, faMap, faPrint, faX, faClose, faFile, faMapMarked} from '@fortawesome/free-solid-svg-icons';
+import { faBriefcase, faBuilding, faMapMarked, faPrint, faClose, faFile } from '@fortawesome/free-solid-svg-icons';
 import { PieChart, pieArcLabelClasses } from '@mui/x-charts/PieChart';
 import Sidebar from '../../components/users/Sidebar';
 import UserHeader from '../../components/users/UserHeader';
@@ -20,7 +20,7 @@ function Employment() {
 
   useEffect(() => {
     // Fetch mode employment metrics
-    api.get(`/getModeEmployment`)
+    api.get('/getModeEmployment')
       .then(response => {
         const employmentMetrics = response.data.reduce((acc, item) => {
           acc[item.metric] = item.value;
@@ -31,9 +31,9 @@ function Employment() {
       .catch(error => {
         console.error("Error fetching employment mode metrics:", error);
       });
-  
+
     // Fetch employment category counts
-    api.get(`/getEmploymentCounts`)
+    api.get('/getEmploymentCounts')
       .then(response => {
         const employmentCounts = response.data.reduce((acc, item) => {
           if (!acc[item.category]) {
@@ -48,7 +48,6 @@ function Employment() {
         console.error("Error fetching employment category counts:", error);
       });
   }, []);
-  
 
   const renderPieChart = (data) => {
     const TOTAL = data.reduce((acc, item) => acc + item.value, 0);
@@ -84,30 +83,48 @@ function Employment() {
     const { modeMetrics, categoryCounts } = props;
 
     return (
-      <div ref={ref} className="p-4 print:p-0 bg-white  rounded-lg max-h-full overflow-auto">
+      <div ref={ref} className="p-4 print:p-0 bg-white rounded-lg max-h-full overflow-auto">
         <h2 className="text-2xl font-bold mb-4">Employment Profiling</h2>
         <div className="mb-6">
           <h3 className="text-xl font-semibold">Mode Employment Metrics:</h3>
-          <ul className="list-disc pl-5">
-            {Object.entries(modeMetrics).map(([metric, value]) => (
-              <ul key={metric} className="mb-2">
-                <strong>{metric}:</strong> {value}
-              </ul>
-            ))}
-          </ul>
+          <table className="w-full border-collapse">
+            <thead>
+              <tr>
+                <th className="border p-2">Metric</th>
+                <th className="border p-2">Value</th>
+              </tr>
+            </thead>
+            <tbody>
+              {Object.entries(modeMetrics).map(([metric, value]) => (
+                <tr key={metric}>
+                  <td className="border p-2">{metric}</td>
+                  <td className="border p-2">{value}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
         <div>
           <h3 className="text-xl font-semibold">Employment Category Counts:</h3>
           {Object.keys(categoryCounts).map(category => (
             <div key={category} className="mb-4">
               <h4 className="text-lg font-semibold">{category}</h4>
-              <ul className="list-disc pl-5">
-                {categoryCounts[category].map((item, index) => (
-                  <ul key={index} className="mb-1">
-                    <strong>{item.label}:</strong> {item.value}
-                  </ul>
-                ))}
-              </ul>
+              <table className="w-full border-collapse">
+                <thead>
+                  <tr>
+                    <th className="border p-2">Label</th>
+                    <th className="border p-2">Count</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {categoryCounts[category].map((item, index) => (
+                    <tr key={index}>
+                      <td className="border p-2">{item.label}</td>
+                      <td className="border p-2">{item.value}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
           ))}
         </div>
@@ -205,8 +222,6 @@ function Employment() {
                     </div>
                   </div>
                   {employmentCategoryCounts['First Job Level Position'] && renderPieChart(employmentCategoryCounts['First Job Level Position'])}
-
-
                 </div>
               </div>
             </div>

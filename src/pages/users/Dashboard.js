@@ -27,7 +27,7 @@ function Dashboard({ logout }) {
   const [isModalVisible, setModalVisible] = useState(false);
   const [newAttendeeCount, setNewAttendeeCount] = useState(0);
   const [graduationYearData, setGraduationYearData] = useState({});
-
+  
   const pushCon = () => {
     setToggle(!toggled);
   };
@@ -59,6 +59,7 @@ function Dashboard({ logout }) {
         }, {});
 
         setGraduationYearData(formattedData);
+        console.log("grad data", data);
       })
       .catch(error => {
         console.error(error);

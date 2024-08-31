@@ -23,8 +23,7 @@ function Contribution() {
     // Fetch total awardees count
     api.get('/getTotalAwardee')
       .then(response => {
-        // console.log(response);
-        const  totalAwardees  = response.data[0].totalawardee;
+        const totalAwardees = response.data[0].totalawardee;
         setTotalAwardees(totalAwardees);
       })
       .catch(error => {
@@ -34,8 +33,7 @@ function Contribution() {
     // Fetch total alumni count
     api.get('/getTotalAlumni')
       .then(response => {
-        // console.log(response);
-        const  totalAlumni  = response.data[0].totalalumni;
+        const totalAlumni = response.data[0].totalalumni;
         setTotalAlumni(totalAlumni);
       })
       .catch(error => {
@@ -64,7 +62,7 @@ function Contribution() {
     };
 
     return (
-      <div className="flex">
+      <div className="flex justify-center">
         <PieChart
           series={[
             {
@@ -92,18 +90,24 @@ function Contribution() {
         <h2 className="text-2xl font-bold mb-4">Contribution Profiling</h2>
         <div className="mb-6">
           <h3 className="text-xl font-semibold">Awardees Percentage:</h3>
-          <ul className="list-disc pl-5">
-            <li className="mb-2">
-              <strong>Awardees:</strong> {awardeePercentage}%
-            </li>
-            <li className="mb-2">
-              <strong>Non-Awardees:</strong> {100 - awardeePercentage}%
-            </li>
-          </ul>
-        </div>
-        <div>
-          <h3 className="text-xl font-semibold">Awardees vs Non-Awardees:</h3>
-          {renderPieChart()}
+          <table className="w-full border-collapse">
+            <thead>
+              <tr>
+                <th className="border p-2">Category</th>
+                <th className="border p-2">Percentage</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td className="border p-2">Awardees</td>
+                <td className="border p-2">{awardeePercentage}%</td>
+              </tr>
+              <tr>
+                <td className="border p-2">Non-Awardees</td>
+                <td className="border p-2">{100 - awardeePercentage}%</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
     );
