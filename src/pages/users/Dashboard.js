@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import UserHeader from '../../components/users/UserHeader';
 import Sidebar from '../../components/users/Sidebar';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faGraduationCap } from '@fortawesome/free-solid-svg-icons';
+import { faCheck, faGraduationCap } from '@fortawesome/free-solid-svg-icons';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Bar } from 'react-chartjs-2';
@@ -27,7 +27,8 @@ function Dashboard({ logout }) {
   const [isModalVisible, setModalVisible] = useState(false);
   const [newAttendeeCount, setNewAttendeeCount] = useState(0);
   const [graduationYearData, setGraduationYearData] = useState({});
-  
+  const [graduateTotals, setGraduateTotals] = useState({});
+
   const pushCon = () => {
     setToggle(!toggled);
   };
@@ -52,14 +53,14 @@ function Dashboard({ logout }) {
         const data = response.data;
         const formattedData = data.reduce((acc, item) => {
           if (!acc[item.graduationyear]) {
-            acc[item.graduationyear] = {};
+            acc[item.graduationyear] = { programs: {}, totalTraced: 0 };
           }
-          acc[item.graduationyear][item.program] = item.count;
+          acc[item.graduationyear].programs[item.program] = item.count;
+          acc[item.graduationyear].totalTraced += item.count;
           return acc;
         }, {});
 
         setGraduationYearData(formattedData);
-        console.log("grad data", data);
       })
       .catch(error => {
         console.error(error);
@@ -140,6 +141,33 @@ function Dashboard({ logout }) {
     setSelectedEventId(null);
   };
 
+  const handleGraduateTotalChange = (year, value) => {
+    setGraduateTotals(prevTotals => ({
+      ...prevTotals,
+      [year]: value,
+    }));
+  };
+
+  const handleGraduateTotalSubmit = (year) => {
+    const totalGraduates = graduateTotals[year] || 0;
+    const totalTraced = graduationYearData[year]?.totalTraced || 0;
+    const percentage = totalGraduates ? ((totalTraced / totalGraduates) * 100).toFixed(2) : "0.00";
+
+    // Send the total graduates to the server
+    api.post(`/setGraduateTotal`, {
+      year,
+      totalGraduates,
+    })
+    .then(response => {
+      console.log(`Successfully set graduate total for ${year}`);
+    })
+    .catch(error => {
+      console.error(`Failed to set graduate total for ${year}:`, error);
+    });
+
+    console.log(year, totalGraduates)
+  };
+
   const percentageFormatter = (rowData) => {
     const registered = rowData.totalRegistration || 1; // Avoid division by zero
     const attendeeCount = attendees[rowData.eventid] || rowData.totalattendees; // Use updated attendees count
@@ -150,7 +178,7 @@ function Dashboard({ logout }) {
   // Prepare data for the bar chart
   const allCourses = new Set();
   Object.values(graduationYearData).forEach(yearData => {
-    Object.keys(yearData).forEach(course => allCourses.add(course));
+    Object.keys(yearData.programs).forEach(course => allCourses.add(course));
   });
 
   const labels = Object.keys(graduationYearData);
@@ -159,7 +187,7 @@ function Dashboard({ logout }) {
       label: course,
       backgroundColor: `rgba(${index * 100}, ${index * 50 + 100}, ${index * 100 + 150}, 1)`,
       borderColor: `rgba(${index * 50}, ${index * 50 + 100}, ${index * 50 + 150}, 1)`,
-      data: labels.map(year => graduationYearData[year][course] || 0),
+      data: labels.map(year => graduationYearData[year].programs[course] || 0),
     };
   });
 
@@ -246,14 +274,48 @@ function Dashboard({ logout }) {
             </div>
 
             {/* Bar Chart */}
-<div className='bg-white p-4 rounded-md shadow-md flex justify-center'>
-  <div className='flex flex-col items-center' style={{ width: '100%', maxWidth: '800px' }}>
-    <h2 className='text-lg font-bold mb-4 text-center'>Graduation Year and Program Distribution</h2>
-    <div style={{ width: '100%', height: '400px' }}>
-      <Bar data={barChartData} options={barChartOptions} />
-    </div>
-  </div>
-</div>
+          <div className='bg-white p-4 rounded-md shadow-md flex justify-center'>
+            <div className='flex flex-col items-center mr-10' style={{ width: '100%', maxWidth: '800px' }}>
+              <h2 className='text-lg font-bold mb-4 text-center'>Graduation Year and Program Distribution</h2>
+              <div style={{ width: '100%', height: '400px' }}>
+                <Bar data={barChartData} options={barChartOptions} />
+              </div>
+            </div>
+
+            {/* Feature for Total Graduates, Traced, and Percentage */}
+            <div style={{ display: 'flex', flexDirection: 'column', overflowY: 'auto', maxHeight: '400px' }}>
+              <h3 className='text-xl font-bold mb-4'>Graduate Information</h3>
+              {Object.keys(graduationYearData).map(year => (
+                <div key={year} className='mb-4 flex flex-col justify-center pl-10 pr-10'>
+                  <p className='font-bold'>Year: {year}</p>
+                  <label className='flex-1'>
+                    Total Graduates:
+                  </label>
+                  <div className='flex items-center w-64'>
+                   
+                      <input
+                        type='number'
+                        value={graduateTotals[year] || ''}
+                        onChange={(e) => handleGraduateTotalChange(year, e.target.value)}
+                        className='border p-1 w-full'
+                      />
+                    
+                    <button
+                      onClick={() => handleGraduateTotalSubmit(year)}
+                      className='ml-2 p-1 w-8 h-8 bg-blue-500 text-white rounded hover:bg-blue-600'
+                    >
+                      <FontAwesomeIcon icon={faCheck}/>
+                    </button>
+                  </div>
+                  <p>Total Traced: {graduationYearData[year].totalTraced}</p>
+                  <p>
+                    Percentage: {graduateTotals[year] ? ((graduationYearData[year].totalTraced / graduateTotals[year]) * 100).toFixed(2) : '0.00'}%
+                  </p>
+                </div>
+              ))}
+            </div>
+
+          </div>
 
 
             {/* Incoming Events */}
